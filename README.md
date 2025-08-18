@@ -16,4 +16,7 @@ sudo apt install
 how to run:
 colcon build  --symlink-install
 source install/setup.bash
-ros2 launch robot rsp.launch.py
+3. Terminals öffnen wsl -d Ubuntu-22.04
+- ros2 launch robot rsp.launch.py
+- rviz2  // rviz2 -d src/robot/config/view_robot.rviz 
+- ros2 run joint_state_publisher_gui joint_state_publisher_gui
