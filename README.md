@@ -8,17 +8,23 @@ Dies ist ein ROS 2 Robot-Paket. Bitte passe den Namen an, falls du das Paket umb
 
 ```txt
 dev_ws_robot/
-├── .vscode/        # VS Code spezifische Einstellungen (z.B. Debugging, Linting)
-│   └── settings.json
-├── build/          # Von colcon generierte temporäre Build-Dateien
-│   └── ...         # (Nicht versionskontrolliert, wird bei jedem Build neu erstellt)
-├── install/        # Installierte Artefakte nach dem Build (Setupscripte, ausführbare Dateien)
-│   └── ...         # (Wird von colcon erzeugt)
-├── log/            # Build- und Ausführungslogs
-│   └── ...         # (Hilfreich für Debugging)
-└── src/            # Quellcode-Verzeichnis für ROS 2 Pakete
-    └── robot/      # Dein ROS 2 Paket "robot"
-        ├── ...     # (Hier liegen Launchfiles, URDF, Konfigurationen, Nodes etc.)
+├── build/           # Von colcon generierte temporäre Build-Dateien
+│   ├── .built_by        # Marker-Datei für den Build-Prozess
+│   ├── COLCON_IGNORE    # Verhindert, dass colcon dieses Verzeichnis erneut baut
+│   └── robot/           # Build-Artefakte für das Paket "robot"
+├── install/         # Installierte Artefakte nach dem Build
+│   ├── setup.bash       # Setup-Skript für ROS 2 Umgebung (bash)
+│   ├── setup.ps1        # Setup-Skript für PowerShell
+│   ├── setup.sh         # Setup-Skript für sh
+│   ├── setup.zsh        # Setup-Skript für zsh
+│   ├── local_setup.*    # Lokale Setup-Skripte für verschiedene Shells
+│   ├── COLCON_IGNORE    # Siehe oben
+│   └── robot/           # Installierte Dateien des Pakets "robot"
+├── log/             # Build- und Ausführungslogs
+│   ├── COLCON_IGNORE    # Siehe oben
+│   └── build_*/         # Einzelne Build-Logs mit Zeitstempel
+└── src/             # Quellcode-Verzeichnis für ROS 2 Pakete
+    └── robot/           # Dein ROS 2 Paket "robot"
 ```
 
 **Kurze Beschreibung der wichtigsten Ordner:**
