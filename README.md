@@ -1,28 +1,124 @@
-## Robot Package Template
+# Robot Package
 
-This is a GitHub template. You can make your own copy by clicking the green "Use this template" button.
+Dies ist ein ROS 2 Robot-Paket. Bitte passe den Namen an, falls du das Paket umbenennst (alle Vorkommen von `robot` ersetzen).
 
-It is recommended that you keep the repo/package name the same, but if you do change it, ensure you do a "Find all" using your IDE (or the built-in GitHub IDE by hitting the `.` key) and rename all instances of `robot` to whatever your project's name is.
+---
 
-Note that each directory currently has at least one file in it to ensure that git tracks the files (and, consequently, that a fresh clone has direcctories present for CMake to find). These example files can be removed if required (and the directories can be removed if `CMakeLists.txt` is adjusted accordingly).
+## Projektstruktur
 
+```txt
+dev_ws_robot/
+├── .vscode/        # VS Code spezifische Einstellungen (z.B. Debugging, Linting)
+│   └── settings.json
+├── build/          # Von colcon generierte temporäre Build-Dateien
+│   └── ...         # (Nicht versionskontrolliert, wird bei jedem Build neu erstellt)
+├── install/        # Installierte Artefakte nach dem Build (Setupscripte, ausführbare Dateien)
+│   └── ...         # (Wird von colcon erzeugt)
+├── log/            # Build- und Ausführungslogs
+│   └── ...         # (Hilfreich für Debugging)
+└── src/            # Quellcode-Verzeichnis für ROS 2 Pakete
+    └── robot/      # Dein ROS 2 Paket "robot"
+        ├── ...     # (Hier liegen Launchfiles, URDF, Konfigurationen, Nodes etc.)
+```
 
+**Kurze Beschreibung der wichtigsten Ordner:**
 
-## Packages to install
+- **.vscode/**  
+  Enthält Einstellungen für Visual Studio Code, z.B. für Python-Interpreter, ROS-Plugins oder Formatierung.
 
-sudo apt install 
-- sudo apt install ros-humble-gazebo-ros-pkgs  // dabei muss humble durch die richtige <ROS-DISTRO> 
+- **build/**  
+  Temporäre Build-Artefakte, die von colcon beim Kompilieren erzeugt werden. Kann bei Problemen gelöscht werden (`colcon build` erstellt sie neu).
 
-how to run:
-colcon build  --symlink-install
+- **install/**  
+  Enthält die ausführbaren Dateien, Setupscripte und installierten ROS 2 Pakete nach dem Build. Wird ebenfalls von colcon verwaltet.
+
+- **log/**  
+  Speichert Logdateien von Build- und Ausführungsvorgängen. Nützlich zur Fehlersuche.
+
+- **src/**  
+  Hier liegen alle ROS 2 Pakete deines Workspaces.  
+  - **robot/**  
+    Dein zentrales ROS 2 Paket. Hier befinden sich Quellcode, Launchfiles, Konfigurationen, URDF/Xacro-Dateien, Nodes usw.
+
+> **Hinweis:** Die Ordner `build/`, `install/` und `log/` werden automatisch erzeugt und sollten nicht in die Versionskontrolle (z.B. git) aufgenommen werden.  
+
+---
+
+## Vorbereitung & Installation
+
+### WSL2: USB-Controller binden
+
+```sh
+# Als Admin in Windows PowerShell:
+usbipd bind --busid 1-1
+```
+
+### Notwendige Pakete installieren
+
+```sh
+sudo apt install ros-<ROS-DISTRO>-gazebo-ros-pkgs
+```
+
+Ersetze `<ROS-DISTRO>` z.B. durch `humble`.
+
+---
+
+## Build & Start
+
+```sh
+colcon build --symlink-install
 source install/setup.bash
-1. Terminals öffnen wsl -d Ubuntu-22.04
-- ros2 launch robot rsp.launch.py
-- rviz2  // rviz2 -d src/robot/config/view_robot.rviz 
-- ros2 run joint_state_publisher_gui joint_state_publisher_gui
+```
 
-Simulation aktivieren
+
+### Starten der Simulation
+
+1. Terminal öffnen (`wsl -d Ubuntu-22.04`)
+2. ROS2 Launch starten:
+    - `ros2 launch robot rsp.launch.py`
+    - `rviz2` (optional: `rviz2 -d src/robot/config/view_robot.rviz`)
+    - `ros2 run joint_state_publisher_gui joint_state_publisher_gui`
+
+#### Simulation aktivieren
+
+```sh
+ros2 launch robot rsp.launch.py use_sim_time:=true
+ros2 launch gazebo_ros gazebo.launch.py
+ros2 run gazebo_ros spawn_entity.py -topic robot_description -entity robot
+ros2 launch robot launch_sim.launch.py
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+```
+
 - ros2 launch robot rsp.launch.py use_sim_time:=true // wie man prüft ob die simulation erfolgreich gestartet wurde  'ros2 param get /robot_state_publisher use_sim_time' Boolean value is: True
 ros2 launch gazebo_ros gazebo.launch.py
 ros2 run gazebo_ros spawn_entity.py -topic robot_description -entity robot
 - ros2 launch robot launch_sim.launch.py
+- ros2 run teleop_twist_keyboard teleop_twist_keyboard
+
+#### Andere Welt laden
+
+```sh
+ros2 launch robot launch_sim.launch.py world:=src/robot/worlds/obstacles.world
+ros2 launch robot launch_sim.launch.py world:=$(pwd)/src/robot/worlds/obstacles.world
+```
+
+---
+
+## Troubleshooting
+
+- Prüfe die Geschwindigkeiten auf `/cmd_vel`:
+  ```sh
+  ros2 topic echo /cmd_vel
+  ```
+- Für Joystick-Steuerung:
+  - `teleop_twist_joy` (Node: `teleop_node`)
+  - `joy` (Node: `joy_node`)
+
+---
+
+
+teleop_twist_joy -- teleop_node
+joy --- joy_node
+
+## How to build WSL2 Kernel
+https://blog.thetechcorner.sk/posts/Update-WSL2-kernel-to-6-6-x/
