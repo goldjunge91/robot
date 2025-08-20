@@ -8,23 +8,28 @@ Dies ist ein ROS 2 Robot-Paket. Bitte passe den Namen an, falls du das Paket umb
 
 ```txt
 dev_ws_robot/
-├── build/           # Von colcon generierte temporäre Build-Dateien
-│   ├── .built_by        # Marker-Datei für den Build-Prozess
-│   ├── COLCON_IGNORE    # Verhindert, dass colcon dieses Verzeichnis erneut baut
-│   └── robot/           # Build-Artefakte für das Paket "robot"
-├── install/         # Installierte Artefakte nach dem Build
-│   ├── setup.bash       # Setup-Skript für ROS 2 Umgebung (bash)
-│   ├── setup.ps1        # Setup-Skript für PowerShell
-│   ├── setup.sh         # Setup-Skript für sh
-│   ├── setup.zsh        # Setup-Skript für zsh
-│   ├── local_setup.*    # Lokale Setup-Skripte für verschiedene Shells
-│   ├── COLCON_IGNORE    # Siehe oben
-│   └── robot/           # Installierte Dateien des Pakets "robot"
-├── log/             # Build- und Ausführungslogs
-│   ├── COLCON_IGNORE    # Siehe oben
-│   └── build_*/         # Einzelne Build-Logs mit Zeitstempel
-└── src/             # Quellcode-Verzeichnis für ROS 2 Pakete
-    └── robot/           # Dein ROS 2 Paket "robot"
+src/
+└── robot/
+    ├── CMakeLists.txt         # Build-Konfiguration für das ROS 2 Paket
+    ├── LICENSE.md             # Lizenzinformationen
+    ├── package.xml            # Paketbeschreibung und Abhängigkeiten
+    ├── README.md              # Dokumentation zum Paket
+    ├── config/                # Konfigurationsdateien (z.B. RViz, Joystick, Parameter)
+    │   ├── drive_robot_gazebo_rviz.rviz
+    │   ├── empty.yaml
+    │   ├── view_robot.rviz
+    │   └── xbox_elite_config.yaml
+    ├── description/           # Roboterbeschreibung (URDF/Xacro-Dateien)
+    │   ├── gazebo_control.xacro
+    │   ├── inertial_macros.xacro
+    │   ├── robot_core.xacro
+    │   └── robot.urdf.xacro
+    ├── launch/                # Launchfiles zum Starten von Simulation und Nodes
+    │   ├── launch_sim.launch.py
+    │   └── rsp.launch.py
+    └── worlds/                # Gazebo-Welten für die Simulation
+        ├── empty.world
+        └── obstacles.world
 ```
 
 **Kurze Beschreibung der wichtigsten Ordner:**
