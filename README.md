@@ -69,9 +69,8 @@ usbipd bind --busid 1-1
 ```sh
 sudo apt install ros-<ROS-DISTRO>-gazebo-ros-pkgs
 ```
-
 Ersetze `<ROS-DISTRO>` z.B. durch `humble`.
-
+sudo apt install ros-jazzy-rqt
 ---
 
 ## Build & Start
@@ -113,7 +112,27 @@ ros2 launch robot launch_sim.launch.py world:=src/robot/worlds/obstacles.world
 ros2 launch robot launch_sim.launch.py world:=$(pwd)/src/robot/worlds/obstacles.world
 ```
 
+
+## Image Stuff
+ros2 run rqt_image_view rqt_image_view
+ros2 run image_transport list_transports | zeigt alle verschiede format die das system kennt
+ros2 run image_transport  republish compressed raw --ros-args -r in/compressed:=/camera/image_raw/compressed -r out:=/camera/image_raw/uncompressed
+#ros2-humble-rqt-image-view
+#ros2-jazzy-rqt-image-view
+
 ---
+
+## Rapsberry Pi
+
+wie prüfe ich auf dem pi status
+'which ros2 || echo "ros2 nicht in PATH"'
+/opt/ros/jazzy/bin/ros2
+echo $ROS_DISTRO || echo "ROS_DISTRO nicht gesetzt" 
+jazzy
+apt-cache policy ros-jazzy-v4l2-camera
+apt-cache madison ros-jazzy-v4l2-camera
+source /opt/ros/<distro>/setup.bash   # <distro> z.B. humble, iron, usw.
+echo $ROS_DISTRO
 
 ## Troubleshooting
 
@@ -133,3 +152,5 @@ joy --- joy_node
 
 ## How to build WSL2 Kernel
 https://blog.thetechcorner.sk/posts/Update-WSL2-kernel-to-6-6-x/
+
+
