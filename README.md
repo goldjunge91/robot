@@ -70,10 +70,10 @@ usbipd bind --busid 1-1
 sudo apt install ros-<ROS-DISTRO>-gazebo-ros-pkgs
 ```
 Ersetze `<ROS-DISTRO>` z.B. durch `humble`.
-
 sudo apt install ros-<ROS-DISTRO>-ros2-control ros-<ROS-DISTRO>-ros2-controllers ros-<ROS-DISTRO>-gazebo-ros2-control
-
 sudo apt install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-ros2-control
+joystick jstest-gtk evtest
+sudo apt-get install ros-humble-twist-mux
 
 sudo apt install ros-jazzy-rqt
 ---
@@ -105,7 +105,15 @@ ros2 run controller_manager spawner joint_broad
 
 
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
-  
+ros2 param list
+ros2 run joy joy_enumerate_devices
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
+
+
+
+
+
+
 ### Starten der Simulation
 
 1. Terminal öffnen (`wsl -d Ubuntu-22.04`)
@@ -186,3 +194,23 @@ joy --- joy_node
 https://blog.thetechcorner.sk/posts/Update-WSL2-kernel-to-6-6-x/
 
 
+
+
+Open the file: config/joystick.yaml
+
+Modify the values for the axes and buttons to match your controller's layout.
+
+YAML
+
+teleop_node:
+  ros__parameters:
+    # --- MOVEMENT ---
+    axis_linear:
+      x: 1  # Vertical axis of the left stick
+    axis_angular:
+      yaw: 0 # Horizontal axis of the left stick
+
+    # --- BUTTONS ---
+    enable_button: 6 # The "dead-man's switch"
+    enable_turbo_button: 7 # The button for faster speeds
+You'll need to use a tool like jstest-gtk to find the correct number for each button and axis on your specific controller.
