@@ -70,6 +70,11 @@ usbipd bind --busid 1-1
 sudo apt install ros-<ROS-DISTRO>-gazebo-ros-pkgs
 ```
 Ersetze `<ROS-DISTRO>` z.B. durch `humble`.
+
+sudo apt install ros-<ROS-DISTRO>-ros2-control ros-<ROS-DISTRO>-ros2-controllers ros-<ROS-DISTRO>-gazebo-ros2-control
+
+sudo apt install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-ros2-control
+
 sudo apt install ros-jazzy-rqt
 ---
 
@@ -80,7 +85,27 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
+## command list
+ros2 topic list | zeigt alle topics
+ros2 control
+ros2 control list_hardware_interfaces
+ros2 run controller_manager spawner diff_cont
+ros2 run controller_manager spawner joint_broad
+# spawner.py funkltionierte nicht
+ros2 run controller_manager spawner.py
+ros2 run controller_manager spawner.py diff_cont
+ros2 run controller_manager spawner.py joint_broad
 
+ros2 run controller_manager spawner diff_cont
+ros2 run controller_manager spawner joint_broad
+      [INFO] [1755746501.725611869] [spawner_diff_cont]: Loaded diff_cont
+      [INFO] [1755746501.840605257] [spawner_diff_cont]: Configured and activated diff_cont
+      [INFO] [1755746504.006178285] [spawner_joint_broad]:  Loaded joint_broad
+      [INFO] [1755746504.119964744] [spawner_joint_broad]: Configured and activated joint_broad
+
+
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
+  
 ### Starten der Simulation
 
 1. Terminal öffnen (`wsl -d Ubuntu-22.04`)
