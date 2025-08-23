@@ -70,12 +70,17 @@ usbipd bind --busid 1-1
 sudo apt install ros-<ROS-DISTRO>-gazebo-ros-pkgs
 ```
 Ersetze `<ROS-DISTRO>` z.B. durch `humble`.
-
 sudo apt install ros-<ROS-DISTRO>-ros2-control ros-<ROS-DISTRO>-ros2-controllers ros-<ROS-DISTRO>-gazebo-ros2-control
-
 sudo apt install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-ros2-control
+joystick jstest-gtk evtest
+sudo apt-get install ros-humble-twist-mux
 
-sudo apt install ros-jazzy-rqt
+sudo apt install ros-jazzy-rqt  
+ git clone -b ros2https://github.com/RobotWebTools/web_video_server.git
+(https://github.com/RobotWebTools/web_video_server.git)
+Rebuild the workspace with colcon
+In two different tabs, source the workspace, launch the camera driver (like normal), and run ros2 run web_video_server web_video_server
+sudo apt install ros-humble-rosbridge-suite
 ---
 
 ## Build & Start
@@ -105,9 +110,17 @@ ros2 run controller_manager spawner joint_broad
 
 
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
-  
-### Starten der Simulation
+ros2 param list
+ros2 run joy joy_enumerate_devices
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
 
+ros2 control list_controllers
+ros2 control list_hardware_interfaces
+sudo apt install ros-humble-foxglove-bridge
+ros2 topic echo /diff_cont/odom
+
+### Starten der Simulation
+git clone -b ros2 https://github.com/RobotWebTools/web_video_server.git
 1. Terminal öffnen (`wsl -d Ubuntu-22.04`)
 2. ROS2 Launch starten:
     - `ros2 launch robot rsp.launch.py`
@@ -186,3 +199,23 @@ joy --- joy_node
 https://blog.thetechcorner.sk/posts/Update-WSL2-kernel-to-6-6-x/
 
 
+
+
+Open the file: config/joystick.yaml
+
+Modify the values for the axes and buttons to match your controller's layout.
+
+YAML
+
+teleop_node:
+  ros__parameters:
+    # --- MOVEMENT ---
+    axis_linear:
+      x: 1  # Vertical axis of the left stick
+    axis_angular:
+      yaw: 0 # Horizontal axis of the left stick
+
+    # --- BUTTONS ---
+    enable_button: 6 # The "dead-man's switch"
+    enable_turbo_button: 7 # The button for faster speeds
+You'll need to use a tool like jstest-gtk to find the correct number for each button and axis on your specific controller.
