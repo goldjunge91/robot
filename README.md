@@ -75,7 +75,12 @@ sudo apt install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-
 joystick jstest-gtk evtest
 sudo apt-get install ros-humble-twist-mux
 
-sudo apt install ros-jazzy-rqt
+sudo apt install ros-jazzy-rqt  
+ git clone -b ros2https://github.com/RobotWebTools/web_video_server.git
+(https://github.com/RobotWebTools/web_video_server.git)
+Rebuild the workspace with colcon
+In two different tabs, source the workspace, launch the camera driver (like normal), and run ros2 run web_video_server web_video_server
+sudo apt install ros-humble-rosbridge-suite
 ---
 
 ## Build & Start
@@ -109,13 +114,13 @@ ros2 param list
 ros2 run joy joy_enumerate_devices
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
 
-
-
-
-
+ros2 control list_controllers
+ros2 control list_hardware_interfaces
+sudo apt install ros-humble-foxglove-bridge
+ros2 topic echo /diff_cont/odom
 
 ### Starten der Simulation
-
+git clone -b ros2 https://github.com/RobotWebTools/web_video_server.git
 1. Terminal öffnen (`wsl -d Ubuntu-22.04`)
 2. ROS2 Launch starten:
     - `ros2 launch robot rsp.launch.py`
