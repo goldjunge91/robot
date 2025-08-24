@@ -71,6 +71,9 @@ sudo apt install ros-<ROS-DISTRO>-gazebo-ros-pkgs
 ```
 Ersetze `<ROS-DISTRO>` z.B. durch `humble`.
 sudo apt install ros-<ROS-DISTRO>-ros2-control ros-<ROS-DISTRO>-ros2-controllers ros-<ROS-DISTRO>-gazebo-ros2-control
+
+sudo apt install ros-humble-xacro ros-humble-joint-state-publisher-gui
+
 sudo apt install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-ros2-control
 joystick jstest-gtk evtest
 sudo apt-get install ros-humble-twist-mux
@@ -78,6 +81,8 @@ sudo apt install ros-humble-urdf
 sudo apt install ros-humble-urdf-tutorial
 sudo apt install ros-humble-urdf-launch
 sudo apt install ros-jazzy-rqt  
+
+sudo apt install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-ros2-control
  git clone -b ros2https://github.com/RobotWebTools/web_video_server.git
 (https://github.com/RobotWebTools/web_video_server.git)
 Rebuild the workspace with colcon
