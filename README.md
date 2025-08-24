@@ -74,20 +74,48 @@ sudo apt install ros-<ROS-DISTRO>-ros2-control ros-<ROS-DISTRO>-ros2-controllers
 sudo apt install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-ros2-control
 joystick jstest-gtk evtest
 sudo apt-get install ros-humble-twist-mux
-
+sudo apt install ros-humble-urdf
+sudo apt install ros-humble-urdf-tutorial
+sudo apt install ros-humble-urdf-launch
 sudo apt install ros-jazzy-rqt  
  git clone -b ros2https://github.com/RobotWebTools/web_video_server.git
 (https://github.com/RobotWebTools/web_video_server.git)
 Rebuild the workspace with colcon
 In two different tabs, source the workspace, launch the camera driver (like normal), and run ros2 run web_video_server web_video_server
 sudo apt install ros-humble-rosbridge-suite
+
+### turtlebot
+##### remote pc
+sudo apt install ros-humble-gazebo-*
+sudo apt install ros-humble-cartographer
+sudo apt install ros-humble-cartographer-ros
+sudo apt install ros-humble-navigation2
+sudo apt install ros-humble-nav2-bringup
+cd ~/turtlebot3_ws/src/
+git clone -b humble https://github.com/ROBOTIS-GIT/DynamixelSDK.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3/turtlebot3_example.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3_example.git
+sudo apt install python3-colcon-common-extensions
+cd ~/turtlebot3_ws
+
+colcon build --symlink-install
+
+source install/setup.bash echo  oder 'source ~/turtlebot3_ws/install/setup.bash' >> ~/.bashrc
+das nur wenn nicht direkt gesourced wurde source ~/.bashrc
+echo 'export ROS_DOMAIN_ID=30 #TURTLEBOT3' >> ~/.bashrc
+echo 'source /usr/share/gazebo/setup.sh' >> ~/.bashrc
+echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
+source ~/.bashrc
 ---
 
 ## Build & Start
 
 ```sh
-colcon build --symlink-install
+source /opt/ros/humble/setup.bash
 source install/setup.bash
+colcon build --symlink-install
 ```
 
 ## command list
