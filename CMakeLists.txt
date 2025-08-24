@@ -35,6 +35,7 @@ endif()
 install(
   DIRECTORY config description launch worlds
   DESTINATION share/${PROJECT_NAME}
+  raspberrypi/tb6612_bridge.py
 )
 
 ament_package()
