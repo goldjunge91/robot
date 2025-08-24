@@ -11,14 +11,21 @@ from launch.actions import RegisterEventHandler
 from launch.event_handlers import OnProcessStart
 
 from launch_ros.actions import Node
+from launch.substitutions import LaunchConfiguration
+from launch.actions import DeclareLaunchArgument
+from launch.conditions import IfCondition
 
 
 def generate_launch_description():
 
-    # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
-    # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
+    # Include the robot_state_publisher launch file, provided by our own package.
+    # Two launch arguments are provided so we can disable ros2_control at runtime
+    # during development (the hardware plugin may not be available).
 
     package_name = "robot"
+
+    use_ros2_control = LaunchConfiguration('use_ros2_control')
+    cmd_topic = LaunchConfiguration('cmd_topic')
 
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -28,7 +35,7 @@ def generate_launch_description():
                 )
             ]
         ),
-        launch_arguments={"use_sim_time": "false", "use_ros2_control": "true"}.items(),
+        launch_arguments={"use_sim_time": "false", "use_ros2_control": use_ros2_control}.items(),
     )
 
     robot_description = Command(
@@ -43,34 +50,39 @@ def generate_launch_description():
         package="controller_manager",
         executable="ros2_control_node",
         parameters=[{"robot_description": robot_description}, controller_params_file],
+        condition=IfCondition(use_ros2_control),
     )
 
-    delayed_controller_manager = TimerAction(period=3.0, actions=[controller_manager])
+    delayed_controller_manager = TimerAction(period=3.0, actions=[controller_manager], condition=IfCondition(use_ros2_control))
 
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
         arguments=["diff_cont"],
+        condition=IfCondition(use_ros2_control),
     )
 
     delayed_diff_drive_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
             target_action=controller_manager,
             on_start=[diff_drive_spawner],
-        )
+        ),
+        condition=IfCondition(use_ros2_control),
     )
 
     joint_broad_spawner = Node(
         package="controller_manager",
         executable="spawner",
         arguments=["joint_broad"],
+        condition=IfCondition(use_ros2_control),
     )
 
     delayed_joint_broad_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
             target_action=controller_manager,
             on_start=[joint_broad_spawner],
-        )
+        ),
+        condition=IfCondition(use_ros2_control),
     )
 
     # Code for delaying a node (I haven't tested how effective it is)
@@ -99,8 +111,6 @@ def generate_launch_description():
             "robot_bridge.tb6612_bridge",
             "--ros-args",
             "-p",
-            "cmd_topic:=/cmd_vel",
-            "-p",
             "port:=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0",
             "-p",
             "baud:=115200",
@@ -115,12 +125,19 @@ def generate_launch_description():
         ],
         name="tb6612_bridge",
         output="screen",
+        additional_env={"CMD_TOPIC": cmd_topic},
     )
     # ---------------------------------------------------------
 
     # Launch them all!
     return LaunchDescription(
         [
+            DeclareLaunchArgument(
+                'use_ros2_control', default_value='false', description='Enable ros2_control (set false for dev)'
+            ),
+            DeclareLaunchArgument(
+                'cmd_topic', default_value='/diff_cont/cmd_vel_unstamped', description='Topic for bridge/teleop'
+            ),
             rsp,
             delayed_controller_manager,
             delayed_diff_drive_spawner,

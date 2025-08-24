@@ -9,6 +9,7 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     use_sim_time = LaunchConfiguration("use_sim_time")
+    cmd_topic = LaunchConfiguration("cmd_topic")
 
     joy_params = os.path.join(
         get_package_share_directory("robot"), "config", "joystick.yaml"
@@ -25,7 +26,7 @@ def generate_launch_description():
         executable="teleop_node",
         name="teleop_node",
         parameters=[joy_params, {"use_sim_time": use_sim_time}],
-        remappings=[("/cmd_vel", "/diff_cont/cmd_vel_unstamped")],
+        remappings=[("/cmd_vel", cmd_topic)],
     )
 
     # twist_stamper = Node(
@@ -44,6 +45,11 @@ def generate_launch_description():
                 "use_sim_time",
                 default_value="false",
                 description="Use sim time if true",
+            ),
+            DeclareLaunchArgument(
+                "cmd_topic",
+                default_value="/diff_cont/cmd_vel_unstamped",
+                description="Topic where teleop publishes (forwarded to bridge)",
             ),
             joy_node,
             teleop_node,
