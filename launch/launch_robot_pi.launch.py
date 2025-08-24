@@ -90,13 +90,29 @@ def generate_launch_description():
     # Replace the diff_drive_spawner in the final return with delayed_diff_drive_spawner
     
     # --------------------- NEU (minimal) ---------------------
-    # Start the tb6612_bridge.py directly as a Python process from the package share
-    tb6612_script = os.path.join(
-        get_package_share_directory(package_name), "raspberrypi", "tb6612_bridge.py"
-    )
-
+    # Start the tb6612 bridge by running the package module directly with python -m
+    # This avoids requiring an installed console entrypoint (libexec) during dev builds.
     tb6612_bridge_proc = ExecuteProcess(
-        cmd=["python3", tb6612_script],
+        cmd=[
+            "python3",
+            "-m",
+            "robot_bridge.tb6612_bridge",
+            "--ros-args",
+            "-p",
+            "cmd_topic:=/cmd_vel",
+            "-p",
+            "port:=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0",
+            "-p",
+            "baud:=115200",
+            "-p",
+            "max_lin:=0.5",
+            "-p",
+            "max_ang:=1.0",
+            "-p",
+            "mix:=1.0",
+            "-p",
+            "send_hz:=20.0",
+        ],
         name="tb6612_bridge",
         output="screen",
     )

@@ -13,7 +13,11 @@ def generate_launch_description():
                 executable="v4l2_camera_node",
                 output="screen",
                 parameters=[
-                    {"image_size": [640, 480], "camera_frame_id": "camera_link_optical"}
+                    {
+                        "image_size": [640, 480],
+                        "camera_frame_id": "camera_link_optical",
+                        "device": "/dev/v4l/by-id/usb-HD_USB_Camera_HD_USB_Camera-video-index0",
+                    }
                 ],
             )
         ]
