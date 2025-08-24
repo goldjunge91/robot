@@ -117,6 +117,7 @@ void loop(){
     // kein lastCmdMs-Update -> bleibt gestoppt bis nächstes Kommando
   }
 }
+
 // /*
 //  * UNO + TB6612 (SparkFun_TB6612) – Simple Serial Control
 //  * Befehle (mit '\n'):
