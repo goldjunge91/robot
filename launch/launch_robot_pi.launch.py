@@ -25,6 +25,11 @@ def generate_launch_description():
     package_name = "robot"
 
     use_ros2_control = LaunchConfiguration('use_ros2_control')
+    cmd_topic_arg = DeclareLaunchArgument(
+        'cmd_topic', 
+        default_value='/cmd_vel', 
+        description='Topic for the robot bridge'
+    )
     cmd_topic = LaunchConfiguration('cmd_topic')
 
     rsp = IncludeLaunchDescription(
@@ -35,7 +40,8 @@ def generate_launch_description():
                 )
             ]
         ),
-        launch_arguments={"use_sim_time": "false", "use_ros2_control": use_ros2_control}.items(),
+        launch_arguments={"use_sim_time": "false", "use_ros2_control": "false"}.items(),
+        #       launch_arguments={"use_sim_time": "false", "use_ros2_control": use_ros2_control}.items(),
     )
 
     robot_description = Command(
@@ -46,6 +52,29 @@ def generate_launch_description():
         get_package_share_directory(package_name), "config", "my_controllers.yaml"
     )
 
+    # 2. Arduino Bridge (Dein Code)
+    # Startet deine Python-Bridge, die auf Geschwindigkeitsbefehle lauscht
+    tb6612_bridge_proc = ExecuteProcess(
+        cmd=["python3", "-m", "robot_bridge.tb6612_bridge"],
+        name="tb6612_bridge",
+        output="screen",
+        additional_env={"CMD_TOPIC": cmd_topic},
+    )
+    # --- 3. Kamera-Node ---
+    # Startet den Treiber für die Kamera.
+    camera_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            [os.path.join(get_package_share_directory(package_name), 'launch', 'camera.launch.py')]
+        )
+    )
+
+    # --- 4. Lidar-Node ---
+    # Startet den Treiber für den RPLIDAR.
+    lidar_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            [os.path.join(get_package_share_directory(package_name), 'launch', 'rplidar.launch.py')]
+        )
+    )
     controller_manager = Node(
         package="controller_manager",
         executable="ros2_control_node",
@@ -100,49 +129,72 @@ def generate_launch_description():
     # )
     #
     # Replace the diff_drive_spawner in the final return with delayed_diff_drive_spawner
-    
+
     # --------------------- NEU (minimal) ---------------------
     # Start the tb6612 bridge by running the package module directly with python -m
     # This avoids requiring an installed console entrypoint (libexec) during dev builds.
-    tb6612_bridge_proc = ExecuteProcess(
-        cmd=[
-            "python3",
-            "-m",
-            "robot_bridge.tb6612_bridge",
-            "--ros-args",
-            "-p",
-            "port:=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0",
-            "-p",
-            "baud:=115200",
-            "-p",
-            "max_lin:=0.5",
-            "-p",
-            "max_ang:=1.0",
-            "-p",
-            "mix:=1.0",
-            "-p",
-            "send_hz:=20.0",
-        ],
-        name="tb6612_bridge",
-        output="screen",
-        additional_env={"CMD_TOPIC": cmd_topic},
-    )
+    # tb6612_bridge_proc = ExecuteProcess(
+    #     cmd=[
+    #         "python3",
+    #         "-m",
+    #         "robot_bridge.tb6612_bridge",
+    #         "--ros-args",
+    #         "-p",
+    #         "port:=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0",
+    #         "-p",
+    #         "baud:=115200",
+    #         "-p",
+    #         "max_lin:=0.5",
+    #         "-p",
+    #         "max_ang:=1.0",
+    #         "-p",
+    #         "mix:=1.0",
+    #         "-p",
+    #         "send_hz:=20.0",
+    #     ],
+    #     name="tb6612_bridge",
+    #     output="screen",
+    #     additional_env={"CMD_TOPIC": cmd_topic},
+    # )
     # ---------------------------------------------------------
 
     # Launch them all!
+    # return LaunchDescription(
+    #     [
+    #         DeclareLaunchArgument(
+    #             'use_ros2_control', default_value='false', description='Enable ros2_control (set false for dev)'
+    #         ),
+    #         DeclareLaunchArgument(
+    #             'cmd_topic', default_value='/diff_cont/cmd_vel_unstamped', description='Topic for bridge/teleop'
+    #         ),
+    #         rsp,
+    #         delayed_controller_manager,
+    #         delayed_diff_drive_spawner,
+    #         delayed_joint_broad_spawner,
+    #          # -------- NEU: Bridge starten --------
+    #         tb6612_bridge_proc,
+    #     ]
+    # )
     return LaunchDescription(
         [
             DeclareLaunchArgument(
-                'use_ros2_control', default_value='false', description='Enable ros2_control (set false for dev)'
+                'use_ros2_control', default_value='false', description='Enable ros2_control'
             ),
             DeclareLaunchArgument(
-                'cmd_topic', default_value='/diff_cont/cmd_vel_unstamped', description='Topic for bridge/teleop'
+                'cmd_topic', default_value='/cmd_vel', description='Topic for bridge/teleop'
             ),
+            
+            # Nodes, die immer laufen:
             rsp,
-            delayed_controller_manager,
-            delayed_diff_drive_spawner,
-            delayed_joint_broad_spawner,
-             # -------- NEU: Bridge starten --------
+            camera_launch,
+            # lidar_launch,
+            
+            # Entweder die Bridge ODER ros2_control:
             tb6612_bridge_proc,
+            
+            # delayed_controller_manager,
+            # #...
+            # diff_drive_spawner,
+            # joint_broad_spawner
         ]
     )
