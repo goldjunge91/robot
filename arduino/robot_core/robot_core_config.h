@@ -32,12 +32,12 @@ const int offsetMotor4 = 1;
 #define L_STBY   A2   // kann unbenutzt bleiben, wenn STBY physisch an 5V
 
 // Rechtes Board (2 Motoren)
-#define R_AIN1   10
-#define R_AIN2   13
-#define R_BIN1   A0
-#define R_BIN2   A1
+#define R_AIN1   0
+#define R_AIN2   1
+#define R_BIN1   11
+#define R_BIN2   12
 #define R_PWMA   9
-#define R_PWMB   11
+#define R_PWMB   10
 #define R_STBY   A3   // kann unbenutzt bleiben, wenn STBY physisch an 5V
 
 // ===== Motor-Offsets (1 oder -1) – Software-"Umpolen"
