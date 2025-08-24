@@ -180,7 +180,6 @@ ros2 run gazebo_ros spawn_entity.py -topic robot_description -entity robot
 
 ```sh
 ros2 launch robot launch_sim.launch.py world:=src/robot/worlds/obstacles.world
-ros2 launch robot launch_sim.launch.py world:=$(pwd)/src/robot/worlds/obstacles.world
 ```
 
 
