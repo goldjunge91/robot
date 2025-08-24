@@ -188,7 +188,7 @@ ros2 launch robot launch_sim.launch.py world:=src/robot/worlds/obstacles.world
 sudo apt update
 sudo apt install -y ros-jazzy-desktop
 # oder nur rqt / image-View falls du nur GUI brauchst:
-sudo apt install -y ros-jazzy-rqt ros-jazzy-rqt-image-view
+sudo apt install -y ros-humble-rqt ros-humble-rqt-image-view
 
 
 ros2 run rqt_image_view rqt_image_view
