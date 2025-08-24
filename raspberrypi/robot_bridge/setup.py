@@ -1,23 +1,23 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 package_name = 'robot_bridge'
 
 setup(
     name=package_name,
-    version='0.0.1',
-    packages=find_packages(include=[package_name, f'{package_name}.*']),
+    version='0.0.0',
+    packages=find_packages(exclude=['test']),
     data_files=[
-        ('share/ament_index/resource_index/packages', ['resource/robot_bridge']),
-        ('share/robot_bridge', ['package.xml']),
-        ('share/robot_bridge/launch', ['launch/robot_pi_bridge.launch.py']),
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='marco',
-    maintainer_email='unknown@example.com',
-    description='TB6612 open-loop bridge (Pi->Arduino) as ROS 2 executable.',
+    maintainer='pi',
+    maintainer_email='pi@todo.todo',
+    description='TB6612 open-loop bridge.',
     license='MIT',
-    tests_require=[],
+    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'tb6612_bridge = robot_bridge.tb6612_bridge:main',

@@ -3,11 +3,13 @@
 <package format="3">
   <name>robot</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="my_email@email.com">MY NAME</maintainer>
-  <license>TODO: License declaration</license>
+  <description>Main robot configuration and launch package.</description>
+  <maintainer email="pi@todo.todo">pi</maintainer>
+  <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>robot_bridge</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

@@ -3,3 +3,11 @@ launch/__pycache__/launch_robot_pi.launch.cpython-310.pyc
 launch/__pycache__/joystick.launch.cpython-310.pyc
 *.cpython-310.pyc
 *.pyc
+__pycache__/**
+__pycache__
+build/**
+log/**
+install/**
+**/build/**
+**/log/**
+**/install/**

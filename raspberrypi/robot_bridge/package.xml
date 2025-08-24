@@ -3,7 +3,7 @@
   <name>robot_bridge</name>
   <version>0.0.1</version>
   <description>TB6612 open-loop bridge and robot utilities (bridge package).</description>
-  <maintainer email="unknown@example.com">marco</maintainer>
+  <maintainer email="pi@todo.todo">pi</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_python</buildtool_depend>

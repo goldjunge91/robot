@@ -13,12 +13,20 @@
 #define DEADZONE_DEFAULT   30    // 0..80 (Anlauf-Offset)
 #define SLEW_DEFAULT       8     // 1..30 (max. PWM-Änderung pro LOOP_MS)
 
+// ===== Offset Motoren(UNO) =====
+// Richtungskorrektur: 1 oder -1 (wenn "vorwärts" falsch herum ist)
+const int offsetMotor1 = 1;
+const int offsetMotor2 = 1;
+const int offsetMotor3 = 1;
+const int offsetMotor4 = 1;
+
+
 // ===== Verkabelung TB6612 (UNO) =====
 // Linkes Board (2 Motoren)
-#define L_AIN1   4
-#define L_AIN2   7
-#define L_BIN1   8
-#define L_BIN2   12
+#define L_AIN1   2
+#define L_AIN2   4 // Motor 1
+#define L_BIN1   7
+#define L_BIN2   8 // Motor 2
 #define L_PWMA   5
 #define L_PWMB   6
 #define L_STBY   A2   // kann unbenutzt bleiben, wenn STBY physisch an 5V

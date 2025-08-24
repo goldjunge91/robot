@@ -10,23 +10,25 @@
 #include <SparkFun_TB6612.h>
 #include <string.h>
 #include <stdio.h>
-
+#include "robot_core_config.h"
 // ---------- Pins (wie SparkFun Hookup Guide) ----------
-#define AIN1 2
-#define AIN2 4
-#define PWMA 5   // PWM
-#define BIN1 7
-#define BIN2 8
-#define PWMB 6   // PWM
-#define STBY 9
+// #define AIN1 2
+// #define AIN2 4
+// #define PWMA 5   // PWM
+// #define BIN1 7
+// #define BIN2 8
+// #define PWMB 6   // PWM
+// #define STBY 9
 
-// Richtungskorrektur: 1 oder -1 (wenn "vorwärts" falsch herum ist)
-const int offsetA = 1;
-const int offsetB = 1;
+
 
 // Motorobjekte
-Motor motorL(AIN1, AIN2, PWMA, offsetA, STBY); // links
-Motor motorR(BIN1, BIN2, PWMB, offsetB, STBY); // rechts
+Motor motor1(L_AIN1, L_AIN2, L_PWMA, OFFSET_L1, L_STBY); // links
+Motor motor2(L_BIN1, L_BIN2, L_PWMB, OFFSET_L2, L_STBY); // links
+
+Motor motor3(R_AIN1, R_AIN2, R_PWMA, OFFSET_R1, R_STBY); // rechts
+Motor motor4(R_BIN1, R_BIN2, R_PWMB, OFFSET_R2, R_STBY); // rechts
+
 
 // Laufzeit-Parameter
 #define PWM_MAX     255
@@ -48,8 +50,10 @@ int pctToPwm(int pct){
 }
 
 void hardStop(){
-  motorL.brake();
-  motorR.brake();
+  motor1.brake();
+  motor2.brake();
+  motor3.brake();
+  motor4.brake();
 }
 
 void setup(){
@@ -69,8 +73,8 @@ void parseLine(char* line){
     if (sscanf(line+2, "%d %d", &Lpct, &Rpct) == 2){
       int L = clamp255(pctToPwm(Lpct));
       int R = clamp255(pctToPwm(Rpct));
-      motorL.drive(L);
-      motorR.drive(R);
+      motor1.drive(L);
+      motor2.drive(R);
       lastCmdMs = millis();
       Serial.print(F("ACK V ")); Serial.print(Lpct); Serial.print(' '); Serial.println(Rpct);
     } else {

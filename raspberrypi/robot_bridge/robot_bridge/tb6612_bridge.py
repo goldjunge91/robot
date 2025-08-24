@@ -25,8 +25,9 @@ class TB6612Bridge(Node):
         self.declare_parameter("max_lin", 0.3)  # m/s
         self.declare_parameter("max_ang", 1.0)  # rad/s
         self.declare_parameter("mix", 0.5)
+        self.declare_parameter("cmd_timeout_ms", 500.0) # NEU: Timeout für Befehle
 
-        # allow overriding topic via environment variable for easier launches
+        # Topic aus Parametern oder Umgebungsvariable beziehen
         topic = os.environ.get("CMD_TOPIC") or self.get_parameter("cmd_topic").value
 
         if os.environ.get("CMD_TOPIC"):
@@ -37,14 +38,15 @@ class TB6612Bridge(Node):
         self.max_lin = float(self.get_parameter("max_lin").value)
         self.max_ang = float(self.get_parameter("max_ang").value)
         self.mix     = float(self.get_parameter("mix").value)
+        self.cmd_timeout = self.get_parameter("cmd_timeout_ms").value / 1000.0
 
         self.ser = self._open_serial(self.port, self.baud)
         self.last_l = 0
         self.last_r = 0
+        self.last_cmd_time = self.get_clock().now() # NEU: Zeit des letzten Befehls
 
-        # Subscription mit parametrierbarem Topic
+        # Subscription und Timer
         self.sub = self.create_subscription(Twist, topic, self.on_cmd, 10)
-
         period = 1.0 / float(self.get_parameter("send_hz").value)
         self.timer = self.create_timer(period, self.send_loop)
 
@@ -64,7 +66,7 @@ class TB6612Bridge(Node):
     def _open_serial(self, port, baud):
         try:
             ser = serial.Serial(port, baud, timeout=0.05)
-            time.sleep(2.0)  # UNO/CH340-Reset abwarten
+            time.sleep(2.0)
             try:
                 ser.write(b"PING\n")
             except Exception:
@@ -75,20 +77,26 @@ class TB6612Bridge(Node):
             raise
 
     def on_cmd(self, msg: Twist):
+        self.last_cmd_time = self.get_clock().now() # NEU: Zeit aktualisieren
         v = clamp(msg.linear.x  / self.max_lin, -1.0, 1.0)
         w = clamp(msg.angular.z / self.max_ang, -1.0, 1.0)
         l = int(round(100 * clamp(v - self.mix * w, -1.0, 1.0)))
         r = int(round(100 * clamp(v + self.mix * w, -1.0, 1.0)))
-        # only log when values change to avoid flooding the logs
+        
         if l != self.last_l or r != self.last_r:
             self.get_logger().debug(f"Cmd received -> L={l} R={r} (v={v:.3f} w={w:.3f})")
         self.last_l = l
         self.last_r = r
 
     def send_loop(self):
+        # NEU: Prüfen, ob der letzte Befehl zu alt ist
+        if (self.get_clock().now() - self.last_cmd_time).nanoseconds / 1e9 > self.cmd_timeout:
+            self.last_l = 0
+            self.last_r = 0
+            self.get_logger().warn("Command timeout, stopping motors.")
+
         try:
             payload = f"V {self.last_l} {self.last_r}\n"
-            # log every write at debug level (use ros2 run / ros2 launch to see)
             self.get_logger().debug(f"Writing serial: {payload.strip()}")
             self.ser.write(payload.encode("ascii"))
         except Exception as e:

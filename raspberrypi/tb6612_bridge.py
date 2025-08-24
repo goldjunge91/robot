@@ -20,6 +20,7 @@ class TB6612Bridge(Node):
         self.declare_parameter('max_lin', 0.3)   # m/s -> kalibrieren
         self.declare_parameter('max_ang', 1.0)   # rad/s -> kalibrieren
         self.declare_parameter('mix', 0.5)
+        self.declare_parameter('cmd_topic', '/diff_cont/cmd_vel_unstamped') # This line is good
 
         self.port = self._pick_port(self.get_parameter('port').value)
         self.baud = int(self.get_parameter('baud').value)
@@ -31,7 +32,9 @@ class TB6612Bridge(Node):
         self.last_l = 0
         self.last_r = 0
 
-        self.sub = self.create_subscription(Twist, 'cmd_vel', self.on_cmd, 10)
+        # self.sub = self.create_subscription(Twist, 'cmd_vel', self.on_cmd, 10)
+        topic = self.get_parameter("cmd_topic").value
+        self.sub = self.create_subscription(Twist, topic, self.on_cmd, 10)
         period = 1.0/float(self.get_parameter('send_hz').value)
         self.timer = self.create_timer(period, self.send_loop)
 

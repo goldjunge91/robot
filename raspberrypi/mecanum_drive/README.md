@@ -27,8 +27,6 @@ rr = vx - vy + (L+W) * omega
 
 `L` und `W` sind dabei Länge und Breite des Roboters, `omega` ist die Rotationsgeschwindigkeit um die Hochachse.
 
-## Hinweis
-Diese Dateien ersetzen **nicht** den bestehenden Code im Repository, sondern liefern eine Vorlage für einen Mecanum-Antrieb. Die diffdrive-Logik kann damit später ersetzt oder ergänzt werden.
 
 # Mecanum Drive Controller
 
