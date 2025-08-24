@@ -35,7 +35,12 @@ endif()
 install(
   DIRECTORY config description launch worlds
   DESTINATION share/${PROJECT_NAME}
-  raspberrypi/tb6612_bridge.py
 )
+
+# Installiere den Python-Node als ausführbares Programm
+#install(PROGRAMS
+#  raspberrypi/tb6612_bridge.py
+#  DESTINATION lib/${PROJECT_NAME}
+#)
 
 ament_package()

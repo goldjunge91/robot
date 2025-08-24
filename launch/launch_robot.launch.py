@@ -89,18 +89,18 @@ def generate_launch_description():
     #
     # Replace the diff_drive_spawner in the final return with delayed_diff_drive_spawner
     
-    # --------------------- NEU (minimal) ---------------------
-    tb6612_params_file = os.path.join(
-        get_package_share_directory(package_name), "config", "tb6612_bridge.yaml"
-    )
+    # # --------------------- NEU (minimal) ---------------------
+    # tb6612_params_file = os.path.join(
+    #     get_package_share_directory(package_name), "config", "tb6612_bridge.yaml"
+    # )
 
-    tb6612_bridge = Node(
-        package=package_name,
-        executable="tb6612_bridge.py",   # siehe Hinweis unten
-        name="tb6612_bridge",
-        output="screen",
-        parameters=[tb6612_params_file],
-    )
+    # tb6612_bridge = Node(
+    #     package=package_name,
+    #     executable="tb6612_bridge.py",   # siehe Hinweis unten
+    #     name="tb6612_bridge",
+    #     output="screen",
+    #     parameters=[tb6612_params_file],
+    # )
     # ---------------------------------------------------------
 
     # Launch them all!
@@ -111,6 +111,6 @@ def generate_launch_description():
             delayed_diff_drive_spawner,
             delayed_joint_broad_spawner,
              # -------- NEU: Bridge starten --------
-            tb6612_bridge,
+            # tb6612_bridge,
         ]
     )
