@@ -7,9 +7,9 @@ This launch file starts the TB6612 hardware interface configured for independent
 control of 4 wheels without specific kinematics constraints.
 
 Usage:
-    ros2 launch tb6612_hardware tb6612_four_wheel.launch.py
-    ros2 launch tb6612_hardware tb6612_four_wheel.launch.py use_mock_hardware:=true
-    ros2 launch tb6612_hardware tb6612_four_wheel.launch.py device:=/dev/ttyUSB0
+    ros2 launch drive_arduino tb6612_four_wheel.launch.py
+    ros2 launch drive_arduino tb6612_four_wheel.launch.py use_mock_hardware:=true
+    ros2 launch drive_arduino tb6612_four_wheel.launch.py device:=/dev/ttyUSB0
 """
 
 from launch import LaunchDescription
@@ -66,7 +66,7 @@ def generate_launch_description():
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution(
-                [FindPackageShare("tb6612_hardware"), "description", "tb6612_four_wheel.urdf.xacro"]
+                [FindPackageShare("robot"), "description", "robot.urdf.xacro"]
             ),
             " ",
             "use_mock_hardware:=",
@@ -87,16 +87,16 @@ def generate_launch_description():
     # Controller configuration
     robot_controllers = PathJoinSubstitution(
         [
-            FindPackageShare("tb6612_hardware"),
-            "controllers",
-            "tb6612_four_wheel_controller.yaml",
+            FindPackageShare("robot"),
+            "config",
+            "my_controllers.yaml",
         ]
     )
 
     # Hardware interface parameters
     hardware_params = PathJoinSubstitution(
         [
-            FindPackageShare("tb6612_hardware"),
+            FindPackageShare("drive_arduino"),
             "controllers",
             "tb6612_hardware_params.yaml",
         ]

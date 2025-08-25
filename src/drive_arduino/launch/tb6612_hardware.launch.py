@@ -8,16 +8,16 @@ It supports differential, mecanum, and four-wheel independent drive types.
 
 Usage:
     # Differential drive (default)
-    ros2 launch tb6612_hardware tb6612_hardware.launch.py
+    ros2 launch drive_arduino tb6612_hardware.launch.py
     
     # Mecanum drive
-    ros2 launch tb6612_hardware tb6612_hardware.launch.py drive_type:=mecanum
+    ros2 launch drive_arduino tb6612_hardware.launch.py drive_type:=mecanum
     
     # Four wheel independent
-    ros2 launch tb6612_hardware tb6612_hardware.launch.py drive_type:=four_wheel
+    ros2 launch drive_arduino tb6612_hardware.launch.py drive_type:=four_wheel
     
     # With custom parameters
-    ros2 launch tb6612_hardware tb6612_hardware.launch.py drive_type:=differential device:=/dev/ttyUSB0 has_encoders:=true
+    ros2 launch drive_arduino tb6612_hardware.launch.py drive_type:=differential device:=/dev/ttyUSB0 has_encoders:=true
 """
 
 from launch import LaunchDescription
@@ -70,7 +70,7 @@ def launch_setup(context, *args, **kwargs):
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution(
-                [FindPackageShare("tb6612_hardware"), "description", urdf_file]
+                [FindPackageShare("robot"), "description", "robot.urdf.xacro"]
             ),
             " ",
             "use_mock_hardware:=",
@@ -97,16 +97,16 @@ def launch_setup(context, *args, **kwargs):
     # Controller configuration
     robot_controllers = PathJoinSubstitution(
         [
-            FindPackageShare("tb6612_hardware"),
-            "controllers",
-            controller_config,
+            FindPackageShare("robot"),
+            "config",
+            "my_controllers.yaml",
         ]
     )
 
     # Hardware interface parameters
     hardware_params = PathJoinSubstitution(
         [
-            FindPackageShare("tb6612_hardware"),
+            FindPackageShare("drive_arduino"),
             "controllers",
             "tb6612_hardware_params.yaml",
         ]

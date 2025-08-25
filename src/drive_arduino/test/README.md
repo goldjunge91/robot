@@ -1,6 +1,18 @@
-# TB6612Comms Unit Tests
+# TB6612 Hardware Interface Tests
 
-This directory contains comprehensive unit tests for the TB6612Comms class, covering all requirements specified in task 10 of the TB6612 hardware interface specification.
+This directory contains comprehensive tests for the TB6612 hardware interface, including unit tests, integration tests, and example usage demonstrations. The tests cover all requirements specified in tasks 10, 11, and 12 of the TB6612 hardware interface specification.
+
+## Test Categories
+
+### Unit Tests (Tasks 10 & 11)
+- **TB6612Comms Tests**: Serial communication functionality
+- **TB6612HardwareInterface Tests**: Hardware interface core functionality
+
+### Integration Tests (Task 12)
+- **Plugin Loading Tests**: Hardware interface plugin registration and discovery
+- **Controller Manager Integration**: Mock controller manager integration tests
+- **Launch File Tests**: Launch file functionality and parameter loading
+- **Example Usage**: Practical usage demonstrations
 
 ## Test Coverage
 
@@ -46,6 +58,15 @@ Comprehensive test suite organized by requirements:
 - **ErrorHandlingTest**: Tests error handling and recovery scenarios
 - **TB6612CommsIntegrationTest**: Integration tests for complete workflows
 
+### test_tb6612_hardware_interface.cpp
+Comprehensive unit tests for the TB6612HardwareInterface class covering all requirements:
+- **ConfigurationParameterTest**: Tests parameter parsing and validation for all drive types
+- **InterfaceExportTest**: Tests state and command interface export for different configurations
+- **VelocityConversionTest**: Tests velocity command conversion and kinematics calculations
+- **EncoderOperationTest**: Tests encoder vs non-encoder operation modes
+- **LifecycleTest**: Tests hardware interface lifecycle methods
+- **IntegrationTest**: Integration tests for complete workflows
+
 ## Test Strategy
 
 Since the TB6612Comms class interacts with hardware serial ports, the tests are designed to:
@@ -70,7 +91,8 @@ colcon test --packages-select drive_arduino
 colcon test-result --all --verbose
 ```
 
-### Manual Execution (if ROS 2 is available locally)
+### Manual Execution (if ROS 2 is available locally) ros2 is not available only as Docker container
+
 ```bash
 # Build with tests enabled
 colcon build --packages-select drive_arduino --cmake-args -DBUILD_TESTING=ON
@@ -82,13 +104,17 @@ colcon test --packages-select drive_arduino
 colcon test-result --all --verbose
 ```
 
-### Using Test Runner Script
+### Using Test Runner Scripts
 ```bash
-# Make script executable
+# Make scripts executable
 chmod +x src/drive_arduino/test/run_tests.sh
+chmod +x src/drive_arduino/test/run_hardware_interface_tests.sh
 
-# Run tests (works in Docker or local ROS 2 environment)
+# Run all tests (works in Docker or local ROS 2 environment)
 ./src/drive_arduino/test/run_tests.sh
+
+# Run only hardware interface tests
+./src/drive_arduino/test/run_hardware_interface_tests.sh
 ```
 
 ## Test Results Interpretation

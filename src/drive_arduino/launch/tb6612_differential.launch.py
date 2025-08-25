@@ -36,23 +36,20 @@ def generate_launch_description():
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution(
-                [FindPackageShare("diffdrive_arduino"), "description", "tb6612_differential.urdf.xacro"]
+                [FindPackageShare("robot"), "description", "robot.urdf.xacro"]
             ),
             " ",
-            "use_mock_hardware:=",
+            "sim_mode:=",
             use_mock_hardware,
-            " ",
-            "mock_sensor_commands:=",
-            mock_sensor_commands,
         ]
     )
     robot_description = {"robot_description": robot_description_content}
 
     robot_controllers = PathJoinSubstitution(
         [
-            FindPackageShare("diffdrive_arduino"),
-            "controllers",
-            "tb6612_differential_controller.yaml",
+            FindPackageShare("robot"),
+            "config",
+            "my_controllers.yaml",
         ]
     )
 

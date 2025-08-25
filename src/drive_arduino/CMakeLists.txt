@@ -78,7 +78,6 @@ ament_export_dependencies(
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   find_package(ament_cmake_gtest REQUIRED)
-  find_package(ament_cmake_gmock REQUIRED)
   
   # Configure linting to skip test directory
   list(APPEND AMENT_LINT_AUTO_EXCLUDE
@@ -124,6 +123,45 @@ if(BUILD_TESTING)
     tb6612_hardware
   )
   
+  # Unit tests for TB6612HardwareInterface
+  ament_add_gtest(test_tb6612_hardware_interface
+    test/test_tb6612_hardware_interface.cpp
+  )
+  
+  target_include_directories(test_tb6612_hardware_interface PRIVATE
+    include
+  )
+  
+  ament_target_dependencies(test_tb6612_hardware_interface
+    hardware_interface
+    rclcpp
+    serial
+  )
+  
+  target_link_libraries(test_tb6612_hardware_interface
+    tb6612_hardware
+  )
+  
+  # Integration tests for TB6612 Hardware Interface
+  ament_add_gtest(test_tb6612_integration
+    test/test_tb6612_integration.cpp
+  )
+  
+  target_include_directories(test_tb6612_integration PRIVATE
+    include
+  )
+  
+  ament_target_dependencies(test_tb6612_integration
+    hardware_interface
+    controller_manager
+    rclcpp
+    pluginlib
+    serial
+  )
+  
+  target_link_libraries(test_tb6612_integration
+    tb6612_hardware
+  )
 
 endif()
 
