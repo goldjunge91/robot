@@ -11,3 +11,20 @@ install/**
 **/build/**
 **/log/**
 **/install/**
+# Ignore build artifacts
+build/
+install/
+log/
+
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore macOS files
+.DS_Store
+
+# Ignore virtual environments
+.venv/
+venv/
