@@ -48,6 +48,7 @@ COPY description/ src/robot/description/
 COPY serial/ src/serial/
 COPY package.xml src/robot/
 COPY CMakeLists.txt src/robot/
+COPY scripts/ src/robot/scripts/
 
 # Copy diffdrive_arduino to src
 COPY diffdrive_arduino-main/ src/diffdrive_arduino/

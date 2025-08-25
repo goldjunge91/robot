@@ -15,7 +15,7 @@ services:
       - ros2_build_cache:/ros2_ws/build
       - ros2_install_cache:/ros2_ws/install
       - ros2_log_cache:/ros2_ws/log
-    working_dir: /ros2_ws
+    #working_dir: /ros2_ws
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - ROS_DOMAIN_ID=42
