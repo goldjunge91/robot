@@ -117,7 +117,7 @@ The robot uses a layered control approach:
 
 **ROS2 Control Modes**:
 - **Simulation**: Uses `gazebo_ros2_control/GazeboSystem`
-- **Hardware**: Uses `diffdrive_arduino/DiffDriveArduinoHardware` via `/dev/ttyUSB0`
+- **Hardware**: Uses `drive_arduino/...` via `/dev/ttyUSB0`
 
 **Topic Remapping Strategy**:
 - Controllers publish to namespaced topics (`/diff_cont/cmd_vel_unstamped`)

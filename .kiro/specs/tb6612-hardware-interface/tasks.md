@@ -71,14 +71,14 @@
   - Add tests for error handling scenarios and connection failures
   - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-- [-] 11. Create unit tests for TB6612HardwareInterface class
+- [x] 11. Create unit tests for TB6612HardwareInterface class
   - Test configuration parameter parsing and validation
   - Test state and command interface export for different drive types
   - Test velocity command conversion and kinematics calculations
   - Add tests for encoder vs non-encoder operation modes
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-- [ ] 12. Create integration tests and example usage
+- [x] 12. Create integration tests and example usage
   - Test hardware interface loading and plugin registration
   - Create integration test with mock controller_manager
   - Test compatibility with diff_drive_controller for differential setup
