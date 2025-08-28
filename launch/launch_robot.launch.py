@@ -40,7 +40,7 @@ def generate_launch_description():
     # )
 
     controller_params_file = os.path.join(
-        get_package_share_directory(package_name), "config", "my_controllers_mecanum.yaml"
+        get_package_share_directory(package_name), "config", "my_controllers.yaml"
     )
 
     controller_manager = Node(
