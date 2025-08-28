@@ -1,9 +1,25 @@
+
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <gazebo>
-        <plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+            
+            <parameters>$(find-pkg-share robot)/config/my_controllers_mecanum.yaml</parameters>
+
+            <parameters>$(find-pkg-share robot)/config/gaz_ros2_ctl_use_sim.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+</robot>
+
+<!-- <?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <gazebo>
+        <!-- <plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'> -->
     
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
     
             <!-- Wheel Information -->
             <left_joint>left_wheel_joint</left_joint>
@@ -26,6 +42,19 @@
             <publish_wheel_tf>true</publish_wheel_tf>
     
     
+        </plugin>
+    </gazebo>
+
+</robot> -->
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+
+            <parameters>$(find-pkg-share robot)/config/my_controllers_mecanum.yaml</parameters>
+
+            <parameters>$(find-pkg-share robot)/config/gaz_ros2_ctl_use_sim.yaml</parameters>
         </plugin>
     </gazebo>
 

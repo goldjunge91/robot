@@ -35,8 +35,12 @@ def generate_launch_description():
         ["ros2 param get --hide-type /robot_state_publisher robot_description"]
     )
 
+    # controller_params_file = os.path.join(
+    #     get_package_share_directory(package_name), "config", "my_controllers.yaml"
+    # )
+
     controller_params_file = os.path.join(
-        get_package_share_directory(package_name), "config", "my_controllers.yaml"
+        get_package_share_directory(package_name), "config", "my_controllers_mecanum.yaml"
     )
 
     controller_manager = Node(
@@ -88,7 +92,7 @@ def generate_launch_description():
     # )
     #
     # Replace the diff_drive_spawner in the final return with delayed_diff_drive_spawner
-    
+
     # --------------------- NEU (minimal) ---------------------
     # Start the tb6612_bridge.py directly as a Python process from the package share
     tb6612_script = os.path.join(
@@ -110,6 +114,6 @@ def generate_launch_description():
             delayed_diff_drive_spawner,
             delayed_joint_broad_spawner,
              # -------- NEU: Bridge starten --------
-            tb6612_bridge_proc,
+            # tb6612_bridge_proc,
         ]
     )

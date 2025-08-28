@@ -75,14 +75,14 @@ def generate_launch_description():
     spawn_entity = Node(
         package="gazebo_ros",
         executable="spawn_entity.py",
-        arguments=["-topic", "robot_description", "-entity", "my_bot"],
+        arguments=["-topic", "robot_description", "-entity", "robot"],
         output="screen",
     )
 
-    diff_drive_spawner = Node(
+    mecanum_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["diff_cont"],
+        arguments=["mecanum_drive_controller"],
     )
 
     joint_broad_spawner = Node(
@@ -115,7 +115,7 @@ def generate_launch_description():
             twist_mux,
             gazebo,
             spawn_entity,
-            diff_drive_spawner,
+            mecanum_drive_spawner,
             joint_broad_spawner,
         ]
     )
