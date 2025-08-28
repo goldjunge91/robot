@@ -182,7 +182,8 @@ colcon build --symlink-install
 Alle ROS-/Gazebo-/Controller-Befehle aus dem Original an einem Ort.
 
 - ros2 topic list | zeigt alle topics
-- rviz2 
+- ros2 run joint_state_publisher_gui joint_state_publisher_gui
+- rviz2
 - rviz2 -d src/robot/config/view_robot.rviz
 - ros2 control
 - ros2 control list_hardware_interfaces
