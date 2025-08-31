@@ -18,9 +18,16 @@ setup(
     description='TB6612 open-loop bridge.',
     license='MIT',
     tests_require=['pytest'],
+#     entry_points={
+#         'console_scripts': [
+#             'tb6612_bridge = robot_bridge.tb6612_bridge:main',
+#         ],
+#     },
+# )
     entry_points={
         'console_scripts': [
             'tb6612_bridge = robot_bridge.tb6612_bridge:main',
+            'xbox_pico_bridge = robot_bridge.xbox_pico_bridge:main',
         ],
     },
 )

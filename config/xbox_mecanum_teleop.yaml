@@ -1,0 +1,42 @@
+# Teleop config for Xbox controller -> /cmd_vel for mecanum drive
+
+joy_node:
+  ros__parameters:
+    dev: "/dev/input/js0"
+    deadzone: 0.1
+    autorepeat_rate: 20.0
+    coalesce_interval_ms: 10
+
+# teleop_twist_joy parameters
+# Axis mapping assumes typical Xbox layout on Linux:
+# - Left stick:  axis 1 = forward/backward, axis 0 = left/right
+# - Right stick: axis 3 = left/right (yaw)
+# Buttons: A=0, B=1, X=2, Y=3, LB=4, RB=5
+teleop_twist_joy:
+  ros__parameters:
+    axis_linear:
+      x: 1   # forward/back on left stick (up = -1, down = +1)
+      y: 0   # strafe on left stick (left = -1, right = +1)
+    axis_angular:
+      z: 3   # yaw on right stick (left = -1, right = +1)
+
+    # Scales for normal mode
+    scale_linear:
+      x: 0.6    # m/s
+      y: 0.6    # m/s
+    scale_angular:
+      z: 1.5    # rad/s
+
+    # Scales when turbo is held
+    scale_linear_turbo:
+      x: 1.0
+      y: 1.0
+    scale_angular_turbo:
+      z: 2.5
+
+    enable_button: 5         # RB must be held to move
+    enable_turbo_button: 4   # LB for turbo
+
+    require_enable_button: true
+    allow_stamped: false     # publish geometry_msgs/Twist (not stamped)
+
