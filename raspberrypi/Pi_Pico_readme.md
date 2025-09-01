@@ -153,6 +153,28 @@ ESC2 sig -> GP15
 Gear servo -> GP16
 ````
 
+Wichtig: Häufige Ursachen, wenn die Motoren nicht laufen
+
+- STBY LOW: Der TB6612 ist im Standby, wenn STBY nicht aktiv auf HIGH liegt. Lege beide STBY‑Pins der Treiber zusammen und führe sie auf `GP0`, und setze diesen Pin im Code auf HIGH.
+- Falsches Pin‑Mapping: Nutze konsequent das `PINMAP` für `IN1/IN2/PWM`. Wenn `IN1/IN2` an falschen GPIOs hängen, steht der Treiber in Bremse (0/0) und nichts bewegt sich.
+- Pin‑Konflikte: Verwende `GP0` nicht gleichzeitig als Encoder‑Eingang – der Pin ist für STBY reserviert. Achte darauf, dass Encoder nicht dieselben Pins belegen wie DIR.
+- Gemeinsame Masse: Pico, TB6612, Akku/Netzteil, Encoder und ESCs müssen eine gemeinsame Masse (GND) haben.
+
+Minimal‑Test (empfohlen)
+
+Für einen schnellen Funktionstest gibt es eine minimal gehaltene MicroPython‑Datei:
+
+- `dev_ws_robot/src/robot/raspberrypi/pico_tb6612_min.py`
+
+Sie setzt STBY auf HIGH, initialisiert die PWM (10 kHz) und bietet einen Selbsttest (jeder Motor vor/zurück mit 40%). Kommandos im Terminal:
+
+- `m <i 0..3> <pct -100..100>`: Einzelnen Motor setzen (FL, FR, RL, RR)
+- `all <pct>`: Alle Motoren gleich setzen
+- `stop`/`x`: Anhalten
+- `quit`/`exit`: Beenden
+
+Nutze diese Datei, um die Verkabelung zu verifizieren, bevor du komplexere Steuerungen aktivierst.
+
 ```py
 # Raspberry Pi Pico (RP2040) - MicroPython 
 # 2 ESCs + 1 CR-Servo (Zahnrad) per Terminal steuern

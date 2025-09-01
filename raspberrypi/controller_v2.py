@@ -28,7 +28,7 @@ except AttributeError:
 # ======= Fixed Pin Map =======
 PINMAP = {
     # TB6612 Standby (beide Treiber an denselben Pin)
-    "TB_STBY": 0,  # GP0 -> HIGH
+    "TB_STBY": 28,  # GP0 -> HIGH
     # Motor Front-Left  (TB1 Channel A)
     "M_FL_IN1": 18,  # DIR (geändert)
     "M_FL_IN2": 19,  # DIR (geändert)
@@ -58,6 +58,7 @@ PINMAP = {
     "ESC1": 14,  # GP14
     "ESC2": 15,  # GP15
     "GEAR": 16,  # GP16
+    
 }
 
 # ======= Configuration derived from PINMAP =======
