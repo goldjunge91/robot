@@ -1,14 +1,13 @@
 
-
 # Omnidirectional Robot — Projektbeschreibung
 
 Ziel
 
-Aufbau einer omnidirektionalen Plattform mit Mecanum-Antrieb zur Fernsteuerung und für spätere Computer-Vision-gestützte Assistenzfunktionen.
+Aufbau einer omnidirektionalen Plattform mit Mecanum-Antrieb zur Fernsteuerung und Computer-Vision-gestützte Assistenzfunktionen.
 
 Scope
 
-Enthalten sind mechanisches Chassis mit Mecanum-Rädern, Antriebs- und Leistungs-elektronik, Basis-Sensorik, Steuer- und Recheneinheiten sowie Telemetrie- und Logging-Funktionen. Externe Infrastruktur (Netzwerk, Ladeinfrastruktur) wird nicht beschrieben.
+Enthalten sind mechanisches Chassis mit Mecanum-Rädern, Antriebs- und Leistungs-elektronik, Basis-Sensorik, Steuer- und Recheneinheiten sowie Telemetrie- und Logging-Funktionen. Externe Infrastruktur  wird nicht beschrieben.
 
 Features
 
@@ -18,39 +17,45 @@ Features
 - Abstandsmessung für Hinderniserkennung
 - USB-Kamera-Integration für CV und Video-Streaming
 
-Komponentenliste
+# Komponentenliste
 
-RUNCCI-YUN 8pcs TT Motoren
-Mecanum-Radsatz 80mm
-TB6612FNG Motor Driver
-INA3221 3-Kanal Sensor
-EVE INR18650-25P
-3S Lademodul USB-C 4A
-Load Sharing Components
-TP4056 Lademodule
-MicroSD Modul
-16GB MicroSD
-3S 10A Li-Ion Batterieschutzplatine
-18650 Batteriehalter
-ADS1115 16-Bit ADC
-TCA9548A I2C Multiplexer
-VL53L0X
-TM1637 LED-Anzeigemodul
-TT-Motoren 4er Set
-Raspberry Pi 4B 8GB
-ESP32
-USB-Kameras (1080p)
-Displays (10", 5")
-9g Servos
-3D-Drucker
-Xbox Controller
-Verkabelung / Jumper
+## Hardware
+<!-- RUNCCI-YUN 8pcs TT Motoren -->
+- 4x GM3865-520 12V DC Reduction Ratio 1:40, Metal Gear Motor with Hall Encoder Feedback, Suitable for Small Wheelbase Robots (300RPM) (L-Type 520 Motor)
+- 4x Mecanum-Radsatz 80mm
+- TB6612FNG Motor Driver
+- INA3221 3-Kanal Sensor
+- ADS1115 16-Bit ADC
+- TCA9548A I2C Multiplexer
+- VL53L0X ?? unklar
+- 1x TM1637 LED-Anzeigemodul
+- 1x Raspberry Pi 4B 8GB
+- 1x USB-Kameras (1080p)
+- 1x Displays (10", 5")
+- 1x INJS022-360 22KG 360° Digital Servo
+- 1x 9g Servos
+- 2x RS2205 2205 2300KV CW CCW Bürstenloser Motor für FPV RC QAV250 X210 Racing
+- Xbox Controller
+- Verkabelung / Jumper
+
+## Elektronik
+
+- 2x Brushless Motoren & 2x ESC 40A für Brushless Motoren (Nerf dart launcher)
+- Lidar LDS01RR
+Load Sharing Components ?? unklar
+
+## Batterie und Batterieladung
+
+- 18650 Batteriehalter
+- 3S Lademodul USB-C 4A
+- EVE INR18650-25P
+- TP4056 Lademodule
+- 3S 10A Li-Ion Batterieschutzplatine
 
 Systemarchitektur
 
 - Steuer- und Wahrnehmungsebene: Raspberry Pi 4B führt CV, Benutzer-Interface und Telemetrie zusammen; USB-Kameras sind direkt am Pi angeschlossen.
-- BMS- und Telemetrieebene: ESP32 sammelt INA3221-Messdaten und loggt auf MicroSD; ESP32 stellt Telemetrie per WiFi/Serial zur Verfügung.
-- Motorsteuerung: TB6612FNG-Module erhalten PWM/DIR-Signale von Pi oder MCU zur Ansteuerung der DC-Motoren, Motorstromversorgung über die Akku-/Power-Ebene.
+- Motorsteuerung: TB6612FNG-Module erhalten PWM/DIR-Signale von Pi Pico oder MCU zuRS2205 2205 2300KV CW CCW Bürstenloser Motor für FPV RC QAV250 X210 Racing Ansteuerung der DC-Motoren, Motorstromversorgung über die Akku-/Power-Ebene.
 - Sensorbus: INA3221, ADS1115 und VL53L0X sind per I2C angebunden; bei Adresskonflikten kann ein I2C-Multiplexer eingesetzt werden.
 - Energie- und Ladeebene: 3S-Akku, Batterieschutzplatine und Lademodule versorgen Motor- und Elektronikspannungen; Load-Sharing-Hardware steuert Ladebetrieb und Versorgung.
 
@@ -58,39 +63,10 @@ Kommunikation und Bedienung
 
 - Xbox-Controller (Bluetooth/USB) oder Smartphone-App für manuelle Steuerung
 
-- WiFi-Interface (über Pi oder ESP32) für Telemetrie, Web-Dashboard und OTA
+- WiFi-Interface für Telemetrie, Web-Dashboard.
 
-t Systems (BMS). Budgetziel: < 100€.
+# Kernentscheidungen
 
-Kernentscheidungen
 - Antrieb: Mecanum-Räder (omnidirektional)
 - Motor-Treiber: TB6612FNG
-- Batterie-Monitoring: INA3221 (3-Kanal)
-- Batterie: 3S (11.1 V)
-- Steuerung: Raspberry Pi 4B (bereits vorhanden) + ESP32 für BMS
-
-Bestandsüberischt
-Bereits vorhanden (vorhanden)
-- Raspberry Pi 4B 8GB
-- ESP32 (mehrere)
-- USB-Kameras (2x 1080p)
-- Displays (10", 5")
-- 9g Servos (2x)
-- 3D-Drucker
-- Xbox Controller
-- Verkabelung/Jumper
-- TB6612FNG Motor Driver (3)
-- INA3221 3-Kanal Sensor (2)
-- TP4056 Lademodule (10)
-- TT-Motoren 4er Set (1)
-- 3S USB-C Lademodule (3)
-- 3S Batterieschutzplatinen (2)
-- 18650 Batteriehalter (3)
-- ADS1115 ADC (2)
-- TCA9548A I2C-Multiplexer (3)
-- VL53L0X Abstandssensor (1)
-- TM1637 LED-Display (1)
-- Mecanum-Räder 80 mm (Set) — erforderlich für omnidirektionales Fahren
-- 3x 18650-Zellen (für 3S-Pack) — Batterien fehlen
-- Load-Sharing-Bauteile (IRF4905 P‑MOSFET, 1N5819 Schottky, 10 kΩ Widerstände, Perfboard)
-
+- Steuerung: Raspberry Pi 4B
