@@ -1,7 +1,3 @@
-You’re close; the remaining issues are wiring/usage, not broken code. Here’s a tight plan to make RViz reliable and avoid re-launch errors.
-
-What Works
-
 Controllers active; /joint_states at ~10 Hz.
 Gazebo moves; odometry published on /mecanum_drive_controller/odometry.
 TF relay added so odom->base_link goes to /tf.
