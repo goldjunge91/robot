@@ -1,5 +1,5 @@
 ---
-description: "Implementation plan template for feature development"
+description: "Implementation plan for an omnidirectional ROS 2 robot with a safety-governed Nerf launcher, SLAM/navigation, and a minimalist Next.js web dashboard."
 scripts:
   sh: scripts/bash/update-agent-context.sh __AGENT__
   ps: scripts/powershell/update-agent-context.ps1 -AgentType __AGENT__

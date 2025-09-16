@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "vscode-mcp-server": {
+      "command": "npx",
+      "args": [
+        "mcp-remote@next",
+        "http://localhost:3000/mcp"
+      ]
+    }
+    // "ros2-mcp-server": {
+    //   "autoApprove": [],
+    //   "disabled": false,
+    //   "timeout": 60,
+    //   "command": "uv",
+    //   "args": [
+    //     "--directory",
+    //     "C:/GIT/ros2-mcp-server",
+    //     "run",
+    //     "bash",
+    //     "-c",
+    //     "export ROS_LOG_DIR=/tmp && source /opt/ros/humble/setup.bash && python3 /path/to/ros2-mcp-server/ros2-mcp-server.py"
+    //   ],
+    //   "transportType": "stdio"
+    // }
+  }
+}
