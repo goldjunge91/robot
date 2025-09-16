@@ -1,6 +1,33 @@
-# OmniROS Project Constitution
+# Robot Project Constitution (ROS 2)
 
 ## Core Principles
+
+### I. Buildable & Launchable
+
+- All functionality ships as ROS2 nodes with clear topics/services; launch files must start subsystems independently; use standard message types when available.
+- The workspace builds cleanly with colcon for all packages under `src/`.
+- Provide runnable launch files. For this repo: `launch_sim.launch.py`, `rsp.launch.py`, and `launch_robot.launch.py` must run without exceptions.
+- URDF/Xacro in `description/` parses without errors; TF tree loads; Gazebo worlds from `worlds/` load via launch.
+
+### II. Minimal Tests (must exist)
+
+- At least one automated test per package (C++: `ament_cmake_gtest`; Python: `ament_pytest`).
+- `colcon test` passes locally and in CI before merge.
+
+### III. Parameters over Hard‑coding
+
+- Tunables live in `config/*.yaml`. Nodes declare parameters and read from YAML (topic names, frame IDs, gains, ports).
+- Launch files expose common args (e.g., `use_sim_time`, `world`, `robot_description` source, controller config path).
+
+### IV. Code Quality Baseline
+
+- Enable ament linters. C++: `ament_lint_auto` (cpplint/cppcheck); Python: `flake8` (and prefer `black`/`isort`).
+- Lint runs as part of tests: `colcon test --ctest-args -R lint` should succeed.
+
+### V. Observability & Interfaces
+
+- Use ROS 2 logging (`rclcpp`/`rclpy`) with proper levels; avoid bare prints in runtime paths.
+- Document topics/services/actions/TF frames in `README.md`. Keep names stable; breaking changes require a version bump and note.
 
 ### ROS2 Modular Nodes
 
@@ -30,15 +57,31 @@ Publish battery data (INA3221), camera stream and key diagnostics to the dashboa
 - Launcher: dual RS2205 brushless flywheels with 40 A ESCs, two-axis servo gimbal
 - Power & Display: 3S Li-Ion pack with BMS, INA3221 current monitor, TM1637 status display
 
-## Workflow Minimums
+## Working Constraints
+
+- Target: ROS 2 Humble (or newer). Simulation via Gazebo with `ros2_control` using configs in `config/` and `description/`.
+- All deps declared in `package.xml`; build logic only in `CMakeLists.txt`/`setup.py`.
+- Hardware/sim parity: same node graph should run in sim and on hardware (Raspberry Pi/Pico bridge) via launch args and YAML.
+
+## Development Workflow & Quality Gates
+
+- Before merge to default branch:
+
+ 1) Build: `colcon build --symlink-install` succeeds.
+ 2) Tests: `colcon test` green; at least one test per package.
+ 3) Lint: ament linters pass.
+ 4) Smoke launch: run `launch_sim.launch.py` headless; verify no exceptions and controllers spawn.
 
 - Supply simulation or recorded data tests for new navigation or launcher code before hardware trials
 - Document each node with expected interfaces and a bench test recipe
 - Capture a validation run after changing kinematics, control loops or safety logic
 - Check launcher arm switch, estop and watchdog behaviour before every live-fire session
+- Versioning: semantic via `package.xml`. Interface changes (topics/services/params) bump MINOR; breaking changes bump MAJOR.
+- Docs: `README.md` shows build/source/launch commands and lists primary topics/frames.
 
 ## Governance
 
-This constitution defines the minimum platform and process; any deviations require documented approval; reviewers confirm compliance during code and hardware reviews; keep runtime guidance documents aligned with this baseline.
+- This Constitution supersedes ad‑hoc practices. Changes require a PR updating this file; include migration notes when interfaces change.
+- Reviewers verify compliance with the gates; exceptions are rare and must be justified in the PR.
 
-**Version**: 0.2.0 | **Ratified**: 2025-09-16 | **Last Amended**: 2025-09-16
+**Version**: 0.1.0 | **Ratified**: 2025-09-16 | **Last Amended**: 2025-09-16
