@@ -5,10 +5,10 @@ Prerequisites: plan.md (required), research.md, data-model.md, contracts/
 
 ## Phase 3.1: Setup
 
-- [ ] T001 Create maps directory `C:/Users/tozzi/Desktop/rc/dev_ws_robot/src/robot/maps/` and document naming in README
-- [ ] T002 Initialize testing and linting: add ament_pytest for Python nodes/tests; ament_lint_auto for C++; configure flake8/black in package where applicable
-- [ ] T003 [P] Add CI-friendly instructions to `README.md` for build (`colcon build`), tests (`colcon test`), and lint
-- [ ] T004 Configure rosbridge_suite and web_video_server launch entries or instructions for dashboard bring-up
+- [x] T001 Create maps directory `C:/Users/tozzi/Desktop/rc/dev_ws_robot/src/robot/maps/` and document naming in README
+- [x] T002 Initialize testing and linting: add ament_pytest for Python nodes/tests; ament_lint_auto for C++; configure flake8/black in package where applicable
+- [x] T003 [P] Add CI-friendly instructions to `README.md` for build (`colcon build`), tests (`colcon test`), and lint
+- [x] T004 Configure rosbridge_suite and web_video_server launch entries or instructions for dashboard bring-up
 
 ## Phase 3.2: Tests First (TDD)
 
@@ -47,7 +47,7 @@ Prerequisites: plan.md (required), research.md, data-model.md, contracts/
 
 ## Dependencies
 
-- Setup (T001–T004) before Tests (T005–T010)
+- Setup (T001-T004) before Tests (T005-T010)
 - Tests before Core (T011–T015)
 - Core before Integration (T016–T018)
 - Everything before Polish (T019–T023)

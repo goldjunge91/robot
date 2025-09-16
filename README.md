@@ -335,3 +335,42 @@ teleop_node:
     enable_turbo_button: 7 # The button for faster speeds
 
 You'll need to use a tool like jstest-gtk to find the correct number for each button and axis on your specific controller.
+---
+
+## Workspace Build & Test (CI)
+
+### Build
+
+```sh
+colcon build --symlink-install --packages-select robot
+```
+
+### Tests
+
+```sh
+colcon test --packages-select robot --event-handlers console_direct+
+colcon test-result --all --verbose
+```
+
+### Lint & Formatting
+
+```sh
+colcon test --packages-select robot --ctest-args -R ament_lint
+flake8 .
+black --check .
+```
+
+These commands are safe to run in CI and locally; lint is configured via `.flake8` and `pyproject.toml`.
+
+---
+
+## Maps Directory & Naming
+
+Speichere SLAM- oder Offline-Karten unter `maps/`. Verwende die Konvention `<umgebung>_<datum>` (z.B. `werkstatt_20250916`) und lege immer das YAML/PGM-Paar ab (`werkstatt_20250916.yaml`, `werkstatt_20250916.pgm`). Zusätzliche Metadaten (z.B. `notes.md`) liegen im gleichnamigen Unterordner.
+
+---
+
+## Dashboard Bridge Launch
+
+Nutze `ros2 launch robot dashboard.launch.py` um `rosbridge_websocket` (Port 9090) und `web_video_server` (Port 8080) gleichzeitig zu starten. Ports lassen sich mit `bridge_port:=<port>` bzw. `video_port:=<port>` überschreiben. Stelle sicher, dass `web_video_server` Zugriff auf das Kameratopic (`/camera/image_raw`) besitzt und dass dein Dashboard den Rosbridge-Endpunkt `ws://<host>:9090` referenziert.
+
