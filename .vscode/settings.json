@@ -1,6 +1,6 @@
 {
     "C_Cpp.errorSquiggles": "disabled",
-    "terminal.integrated.accessibleViewFocusOnCommandExecution": true,
+    "terminal.integrated.accessibleViewFocusOnCommandExecution": false,
     "terminal.integrated.fontLigatures.enabled": true,
     "terminal.integrated.localEchoEnabled": "auto",
     "editor.bracketPairColorization.independentColorPoolPerBracketType": true
