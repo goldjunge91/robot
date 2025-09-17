@@ -374,3 +374,22 @@ Speichere SLAM- oder Offline-Karten unter `maps/`. Verwende die Konvention `<umg
 
 Nutze `ros2 launch robot dashboard.launch.py` um `rosbridge_websocket` (Port 9090) und `web_video_server` (Port 8080) gleichzeitig zu starten. Ports lassen sich mit `bridge_port:=<port>` bzw. `video_port:=<port>` überschreiben. Stelle sicher, dass `web_video_server` Zugriff auf das Kameratopic (`/camera/image_raw`) besitzt und dass dein Dashboard den Rosbridge-Endpunkt `ws://<host>:9090` referenziert.
 
+
+
+## Resource
+https://docs.ros.org/en/humble/How-To-Guides/Launch-file-different-formats.html
+https://husarion.com/tutorials/ros2-tutorials/1-ros2-introduction/
+https://cyberbotics.com/#webots
+https://www.danaukes.com/notebook/ros2/
+https://www.danaukes.com/notebook/ros2/32-using-ros2-on-docker-over-tailscale-container/
+
+https://www.danaukes.com/notebook/ros2/11-installing-ros2-on-a-rpiz2w/
+
+https://rosdabbler.github.io/adventures-in-ros2-networking-2
+https://www.danaukes.com/work-blog/2024-01-25-ros2-over-vpn/
+https://kamathsblog.com/ros-2-and-vpns
+https://gitlab.uni-koblenz.de/intas/vacusim/-/blob/main/README-german.md
+https://gitlab.uni-koblenz.de/intas/ros2-humble-macos-docker-env
+[rosbot-xl-autonomy](https://github.com/husarion/rosbot-xl-autonomy/tree/foxglove?tab=readme-ov-file)
+[text](https://www.allisonthackston.com/)
+[Hardware sale page from husarion](https://husarion.com/tutorials/ros-equipment/)
