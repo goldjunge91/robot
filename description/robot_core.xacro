@@ -177,10 +177,10 @@
     <gazebo reference="right_wheel">
         <material>Gazebo/Blue</material></gazebo> -->
 
-<xacro:create_wheel name="front_left_wheel"  x_offset="${wheel_offset_x}" y_offset="${wheel_offset_y}"/>
-<xacro:create_wheel name="front_right_wheel" x_offset="${wheel_offset_x}" y_offset="-${wheel_offset_y}"/>
-<xacro:create_wheel name="rear_left_wheel"   x_offset="-${wheel_offset_x}" y_offset="${wheel_offset_y}"/>
-<xacro:create_wheel name="rear_right_wheel"  x_offset="-${wheel_offset_x}" y_offset="-${wheel_offset_y}"/>
+    <xacro:create_wheel name="front_left_wheel"  x_offset="${wheel_offset_x}" y_offset="${wheel_offset_y}"/>
+    <xacro:create_wheel name="front_right_wheel" x_offset="${wheel_offset_x}" y_offset="-${wheel_offset_y}"/>
+    <xacro:create_wheel name="rear_left_wheel"   x_offset="-${wheel_offset_x}" y_offset="${wheel_offset_y}"/>
+    <xacro:create_wheel name="rear_right_wheel"  x_offset="-${wheel_offset_x}" y_offset="-${wheel_offset_y}"/>
 
     <!-- CASTER WHEEL LINK -->
     <!-- <joint name="caster_wheel_joint" type="fixed">

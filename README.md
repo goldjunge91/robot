@@ -63,9 +63,30 @@ sudo apt update
 sudo apt install -y ros-<ROS-DISTRO>-gazebo-ros-pkgs
 sudo apt install -y ros-<ROS-DISTRO>-ros2-control ros-<ROS-DISTRO>-ros2-controllers ros-<ROS-DISTRO>-gazebo-ros2-control
 sudo apt install -y ros-<ROS-DISTRO>-xacro ros-<ROS-DISTRO>-joint-state-publisher-gui
+sudo apt install -y ros-<ROS-DISTRO>-xacro ros-<ROS-DISTRO>-joint-state-publisher-gui
+
+sudo apt install -y ros-humble-xacro ros-humble-joint-state-publisher-gui-gazebo-ros-pkgs
 ```
 
-2. Optional / nützlich:
+```bash
+# first run 
+export ROS_DISTRO=humble
+
+# Optional
+# echo "export ROS_DISTRO=humble" >> ~/.bashrc
+# source ~/.bashrc
+
+sudo apt update
+sudo apt install -y \
+  ros-${ROS_DISTRO}-gazebo-ros-pkgs \
+  ros-${ROS_DISTRO}-ros2-control \
+  ros-${ROS_DISTRO}-ros2-controllers \
+  ros-${ROS_DISTRO}-gazebo-ros2-control \
+  ros-${ROS_DISTRO}-xacro \
+  ros-${ROS_DISTRO}-joint-state-publisher-gui
+```
+
+1. Optional / nützlich:
 
 ```sh
 sudo apt install -y joystick jstest-gtk evtest
@@ -131,7 +152,7 @@ sudo apt install ros-humble-urdf
 sudo apt install ros-humble-joint-state-publisher-gui
 sudo apt install ros-humble-urdf-tutorial
 sudo apt install ros-humble-urdf-launch
-sudo apt install ros-jazzy-rqt
+# sudo apt install ros-jazzy-rqt
 sudo apt install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-ros2-control
  git clone -b ros2https://github.com/RobotWebTools/web_video_server.git
 (https://github.com/RobotWebTools/web_video_server.git)

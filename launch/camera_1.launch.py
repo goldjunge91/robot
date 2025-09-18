@@ -16,7 +16,7 @@ def generate_launch_description():
                     {
                         "image_size": [640, 480],
                         "camera_frame_id": "camera_link_optical",
-                        # Correct parameter name is "video_device"
+                        # Correct parameter name for v4l2_camera is "video_device"
                         "video_device": "/dev/v4l/by-id/usb-HD_USB_Camera_HD_USB_Camera-video-index0",
                         "camera_name": "camera",
                         "pixel_format": "YUYV",

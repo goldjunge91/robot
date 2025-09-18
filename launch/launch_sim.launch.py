@@ -1,108 +1,82 @@
 import os
+
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, RegisterEventHandler, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
-from launch_ros.substitutions import FindPackageShare
-
+from ament_index_python.packages import get_package_share_directory
+from launch.event_handlers import OnProcessExit
 
 def generate_launch_description():
-    # Define paths to key packages and files
-    pkg_share = FindPackageShare(package="robot").find("robot")
-    pkg_gazebo_ros = FindPackageShare(package="gazebo_ros").find("gazebo_ros")
+    pkg_share = get_package_share_directory('robot')
+    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
-    # --- Launch Arguments ---
-    # Argument to allow users to specify a world file
     world_arg = DeclareLaunchArgument(
-        name="world",
-        default_value=os.path.join(pkg_share, "worlds", "empty.world"),
-        description="Full path to the world file to load",
+        name='world',
+        default_value=os.path.join(pkg_share, 'worlds', 'empty.world'),
+        description='Full path to the world file to load'
     )
 
-    # --- Robot Description (URDF) ---
-    # This processes your URDF file and prepares it for ROS 2
-    xacro_file = os.path.join(pkg_share, "description", "robot.urdf.xacro")
-    robot_description_config = Command(["xacro ", xacro_file, " sim_mode:=true"])
+    # Optionally enable the tf odometry relay (only start once)
+    enable_tf_relay_arg = DeclareLaunchArgument(
+        name='enable_tf_relay',
+        default_value='true',
+        description='Enable tf odometry relay node to republish /mecanum_drive_controller/tf_odometry -> /tf'
+    )
+
+    # Robot Description (URDF)
+    robot_description_config = Command([
+        'xacro ',
+        os.path.join(pkg_share, 'description', 'robot.urdf.xacro'),
+        ' use_ros2_control:=true',
+        ' sim_mode:=true'
+    ])
+
     robot_state_publisher_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        name="robot_state_publisher",
-        parameters=[
-            {"robot_description": robot_description_config, "use_sim_time": True}
-        ],
-        output="screen",
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        parameters=[{'robot_description': robot_description_config, 'use_sim_time': True}]
     )
 
-    # --- Gazebo Simulation ---
-    # This starts the Gazebo physics server
-    gzserver_launch = IncludeLaunchDescription(
+    # Gazebo Simulation
+    gazebo_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(pkg_gazebo_ros, "launch", "gzserver.launch.py")
+            os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py')
         ),
-        launch_arguments={"world": LaunchConfiguration("world")}.items(),
+        launch_arguments={'world': LaunchConfiguration('world')}.items()
     )
 
-    # This starts the Gazebo graphical client
-    gzclient_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_gazebo_ros, "launch", "gzclient.launch.py")
-        )
-    )
-
-    # --- Spawner Nodes ---
-    # 1. This node spawns your robot model into the running Gazebo simulation
+    # Spawner: Robot Model
     spawn_entity_node = Node(
-        package="gazebo_ros",
-        executable="spawn_entity.py",
-        arguments=["-topic", "robot_description", "-entity", "my_bot"],
-        output="screen",
+        package='gazebo_ros',
+        executable='spawn_entity.py',
+        arguments=['-topic', 'robot_description', '-entity', 'my_bot'],
+        output='screen'
     )
 
-    # 2. This node loads the Joint State Broadcaster controller
-    joint_state_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=[
-            "joint_state_broadcaster",
-            "--controller-manager",
-            "/controller_manager",
-        ],
-        output="screen",
-    )
+    # Note: We intentionally DO NOT spawn controllers externally here.
+    # The gazebo_ros2_control plugin already loads and configures the controllers
+    # from the robot's parameter files. Starting external spawners as well
+    # causes STRICT switch failures and duplicate controller instances.
 
-    # 3. This node loads your Mecanum Drive Controller
-    mecanum_drive_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=[
-            "mecanum_drive_controller",
-            "--controller-manager",
-            "/controller_manager",
-        ],
-        output="screen",
-    )
+    # Start tf_odometry_relay only when explicitly enabled to avoid duplicates
+    from launch.conditions import IfCondition
 
-    # 4. Relay controller's TF to standard /tf so RViz can see odom->base_link
     tf_relay = ExecuteProcess(
         cmd=[
-            "python3",
-            os.path.join(pkg_share, "launch", "tf_odometry_relay.py"),
+            'python3',
+            os.path.join(pkg_share, 'launch', 'tf_odometry_relay.py'),
         ],
-        output="screen",
+        output='screen',
+        condition=IfCondition(LaunchConfiguration('enable_tf_relay')),
     )
 
-    # --- Assemble the Launch Description ---
-    # This defines the order in which things are started.
-    return LaunchDescription(
-        [
-            world_arg,
-            gzserver_launch,
-            gzclient_launch,
-            robot_state_publisher_node,
-            spawn_entity_node,
-            joint_state_broadcaster_spawner,
-            mecanum_drive_controller_spawner,
-            tf_relay,
-        ]
-    )
+    return LaunchDescription([
+        world_arg,
+        enable_tf_relay_arg,
+        gazebo_launch,
+        robot_state_publisher_node,
+        spawn_entity_node,
+        tf_relay,
+    ])
