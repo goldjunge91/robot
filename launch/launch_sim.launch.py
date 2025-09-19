@@ -3,14 +3,14 @@ import os
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess, RegisterEventHandler
 from launch.event_handlers import OnProcessExit
-from launch.substitutions import LaunchConfiguration, Command
+from launch.substitutions import LaunchConfiguration, Command, PythonExpression
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     pkg_share = get_package_share_directory('robot')
     
-    # --- Launch-Argumente ---
+        # --- Launch-Argumente ---
     world_arg = DeclareLaunchArgument(
         name='world',
         default_value=os.path.join(pkg_share, 'worlds', 'empty.world'),
@@ -47,11 +47,17 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameters=[{
-            'robot_description': robot_description_config,
-            'use_sim_time': LaunchConfiguration('use_sim_time')
-        }]
+        parameters=[{'robot_description': robot_description_config, 'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
+    #  robot_state_publisher_node = Node(
+    #     package='robot_state_publisher',
+    #     executable='robot_state_publisher',
+    #     output='screen',
+    #     parameters=[{
+    #         'robot_description': robot_description_config,
+    #         'use_sim_time': LaunchConfiguration('use_sim_time')
+    #     }]
+    # )
 
     spawn_entity_node = Node(
         package='gazebo_ros',
@@ -88,14 +94,22 @@ def generate_launch_description():
         )
     )
 
-    # --- NEU: Hinzufügen des TF Relay Knotens ---
-    tf_relay_node = Node(
-        package='robot', # Das Skript ist Teil deines 'robot'-Pakets
-        executable='tf_odometry_relay.py', # Name deines Python-Skripts
+    # Korrigierter Start des TF-Relay als direkter Python-Prozess
+    tf_relay_script_path = os.path.join(pkg_share, 'launch', 'tf_odometry_relay.py')
+    tf_relay_proc = ExecuteProcess(
+        cmd=['python3', tf_relay_script_path],
         name='tf_odometry_relay',
-        output='screen',
-        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
+        output='screen'
     )
+
+    # # --- NEU: Hinzufügen des TF Relay Knotens ---
+    # tf_relay_node = Node(
+    #     package='robot', # Das Skript ist Teil deines 'robot'-Pakets
+    #     executable='tf_odometry_relay.py', # Name deines Python-Skripts
+    #     name='tf_odometry_relay',
+    #     output='screen',
+    #     parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
+    # )
 
     # --- Launch-Beschreibung zusammenstellen ---
     return LaunchDescription([
@@ -108,8 +122,11 @@ def generate_launch_description():
         spawn_entity_node,
         rviz_node,
         delay_spawners_after_spawn,
-        tf_relay_node, # Den neuen Relay-Knoten hinzufügen
+        tf_relay_proc, # Der korrigierte Prozess-Start
+        # tf_relay_node, # Den neuen Relay-Knoten hinzufügen
+
     ])
+
 
 # import os
 
