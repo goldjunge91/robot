@@ -90,7 +90,7 @@
       <elevation>0</elevation>
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
-    <model name='my_bot'>
+    <model name='robot>
       <link name='base_link'>
         <inertial>
           <pose>-0.067475 0 0.081098 0 -0 0</pose>
@@ -752,7 +752,7 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='my_bot'>
+      <model name='robot>
         <pose>-0.282039 -0.00057 0.032997 1.6e-05 1.8e-05 0.006955</pose>
         <scale>1 1 1</scale>
         <link name='base_link'>

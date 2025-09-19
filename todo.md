@@ -27,8 +27,8 @@ Why RViz showed wheel TF errors
 RViz wasn’t using sim time or hadn’t received /joint_states/TF yet. With sim time enabled and joint states active, robot_state_publisher provides chassis -> wheel transforms and errors clear.
 Avoid Re-launch Collisions
 
-The spawn errors (“Entity [my_bot] already exists”) happen if Gazebo is still running and you launch again. Either kill Gazebo first or remove the model:
-ros2 service call /delete_entity gazebo_msgs/srv/DeleteEntity "{name: 'my_bot'}"
+The spawn errors (“Entity [robot] already exists”) happen if Gazebo is still running and you launch again. Either kill Gazebo first or remove the model:
+ros2 service call /delete_entity gazebo_msgs/srv/DeleteEntity "{name: 'robot'}"
 Notes
 
 Command topic: controller subscribes to /mecanum_drive_controller/reference_unstamped (not /cmd_vel).

@@ -38,7 +38,7 @@ Use this as your working contract when generating code or running commands in th
   - Low-level Arduino/Pico examples live under `raspberrypi/arduino` and `raspberrypi/mecanum*` (not built by colcon).
 
 ### Gotchas and tips
-- Re-launch collisions: if Gazebo already has `my_bot`, delete it via `ros2 service call /delete_entity gazebo_msgs/srv/DeleteEntity "{name: 'my_bot'}"` before respawn.
+- Re-launch collisions: if Gazebo already has `robot`, delete it via `ros2 service call /delete_entity gazebo_msgs/srv/DeleteEntity "{name: 'robot'}"` before respawn.
 - Mecanum strafing visuals may look unrealistic with cylinder wheels in Gazebo; forward/rotation motion is a better validity check.
 - Some legacy content references diff drive; prefer the mecanum controller for omnidirectional motion in simulation. Align controller names between launch and YAML.
 - Worlds like `test.world` contain old absolute paths; launch through `launch_sim.launch.py` instead.
