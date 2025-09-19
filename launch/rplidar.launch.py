@@ -4,6 +4,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
+    serial_port = os.environ.get("RPLIDAR_PORT", "/dev/ttyUSB0")
 
     return LaunchDescription(
         [
@@ -13,7 +14,8 @@ def generate_launch_description():
                 output="screen",
                 parameters=[
                     {
-                        "serial_port": "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.3:1.0-port0",
+                        # "serial_port": "/dev/serial/by-path/platform-fd500000.pcie-pci-0000:01:00.0-usb-0:1.3:1.0-port0",
+                        "serial_port": serial_port,
                         "frame_id": "laser_frame",
                         "angle_compensate": True,
                         "scan_mode": "Standard",

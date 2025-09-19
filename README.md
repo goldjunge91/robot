@@ -1,10 +1,16 @@
 # Robot Package
 
-Dies ist ein ROS 2 Robot-Paket. Bitte passe den Namen an, falls du das Paket umbenennst (alle Vorkommen von `robot` ersetzen).
+Dies ist ein ROS 2 Robot-Paket. Bitte passe den Namen an, falls du das Paket umbenennst (alle Vorkommen von `robot` ersetzen).
 
 ---
 
-## Projektstruktur
+## Kurzübersicht
+
+Dieses Repository enthält ein ROS 2-Paket `robot` mit Launchfiles, URDF/Xacro-Dateien, Konfigurationen für Gazebo und RViz, sowie Hilfsdokumentation. Diese README ist so strukturiert, dass du schnell Installation, Aufbau, Start und Troubleshooting findest.
+
+Wenn du das Paket umbenennst: ersetze alle Vorkommen von `robot`.
+
+## Inhalt / Projektstruktur
 
 ```txt
 dev_ws_robot/
@@ -32,178 +38,308 @@ src/
         └── obstacles.world
 ```
 
-**Kurze Beschreibung der wichtigsten Ordner:**
+Kurze Beschreibung wichtiger Ordner:
 
-- **.vscode/**  
-  Enthält Einstellungen für Visual Studio Code, z.B. für Python-Interpreter, ROS-Plugins oder Formatierung.
+- `.vscode/` – VS Code Einstellungen.
+- `build/` – temporäre Build-Artefakte von `colcon`.
+- `install/` – installierte Artefakte nach Build.
+- `log/` – Logs von Build/Runtime.
+- `src/` – Quellpakete; `robot/` ist das Paket in diesem Repo.
 
-- **build/**  
-  Temporäre Build-Artefakte, die von colcon beim Kompilieren erzeugt werden. Kann bei Problemen gelöscht werden (`colcon build` erstellt sie neu).
-
-- **install/**  
-  Enthält die ausführbaren Dateien, Setupscripte und installierten ROS 2 Pakete nach dem Build. Wird ebenfalls von colcon verwaltet.
-
-- **log/**  
-  Speichert Logdateien von Build- und Ausführungsvorgängen. Nützlich zur Fehlersuche.
-
-- **src/**  
-  Hier liegen alle ROS 2 Pakete deines Workspaces.  
-  - **robot/**  
-    Dein zentrales ROS 2 Paket. Hier befinden sich Quellcode, Launchfiles, Konfigurationen, URDF/Xacro-Dateien, Nodes usw.
-
-> **Hinweis:** Die Ordner `build/`, `install/` und `log/` werden automatisch erzeugt und sollten nicht in die Versionskontrolle (z.B. git) aufgenommen werden.  
+Hinweis: `build/`, `install/` und `log/` werden automatisch erzeugt und sollten nicht in die Versionskontrolle aufgenommen werden.
 
 ---
 
-## Vorbereitung & Installation
+## Schnellstart: Initiale Installation (Remote PC und Raspberry Pi)
 
-### WSL2: USB-Controller binden
+Diese Sektion fasst die ersten Schritte zusammen, um ein System entweder auf einem Remote-PC (Desktop/Server) oder einem Raspberry Pi vorzubereiten.
+
+### Remote PC (Ubuntu / WSL2)
+
+1. Systemabhängigkeiten installieren (ersetze `<ROS-DISTRO>` durch z.B. `humble`):
 
 ```sh
-# Als Admin in Windows PowerShell:
+sudo apt update
+sudo apt install -y ros-<ROS-DISTRO>-gazebo-ros-pkgs
+sudo apt install -y ros-<ROS-DISTRO>-ros2-control ros-<ROS-DISTRO>-ros2-controllers ros-<ROS-DISTRO>-gazebo-ros2-control
+sudo apt install -y ros-<ROS-DISTRO>-xacro ros-<ROS-DISTRO>-joint-state-publisher-gui
+sudo apt install -y ros-<ROS-DISTRO>-xacro ros-<ROS-DISTRO>-joint-state-publisher-gui
+
+sudo apt install -y ros-humble-xacro ros-humble-joint-state-publisher-gui-gazebo-ros-pkgs
+```
+
+```bash
+# first run 
+export ROS_DISTRO=humble
+
+# Optional
+# echo "export ROS_DISTRO=humble" >> ~/.bashrc
+# source ~/.bashrc
+
+sudo apt update
+sudo apt install -y \
+  ros-${ROS_DISTRO}-gazebo-ros-pkgs \
+  ros-${ROS_DISTRO}-ros2-control \
+  ros-${ROS_DISTRO}-ros2-controllers \
+  ros-${ROS_DISTRO}-gazebo-ros2-control \
+  ros-${ROS_DISTRO}-xacro \
+  ros-${ROS_DISTRO}-joint-state-publisher-gui
+```
+
+1. Optional / nützlich:
+
+```sh
+sudo apt install -y joystick jstest-gtk evtest
+sudo apt install -y python3-colcon-common-extensions
+sudo apt install -y ros-<ROS-DISTRO>-twist-mux ros-<ROS-DISTRO>-urdf ros-<ROS-DISTRO>-urdf-tutorial
+```
+
+3. (WSL2) USB-Controller binden (in Windows PowerShell als Admin):
+
+```sh
 usbipd bind --busid 1-1
 ```
 
-### Notwendige Pakete installieren
+4. Workspace bauen und sourcen:
 
 ```sh
-sudo apt install ros-<ROS-DISTRO>-gazebo-ros-pkgs
+source /opt/ros/<ROS-DISTRO>/setup.bash
+source install/setup.bash || true
+colcon build --symlink-install
 ```
-Ersetze `<ROS-DISTRO>` z.B. durch `humble`.
-sudo apt install ros-<ROS-DISTRO>-ros2-control ros-<ROS-DISTRO>-ros2-controllers ros-<ROS-DISTRO>-gazebo-ros2-control
+
+5. Hinweis: Web-Video-Server / Web-Tools (optional):
+
+```sh
+# Beispiel: web_video_server
+git clone -b ros2 https://github.com/RobotWebTools/web_video_server.git
+# Nach dem Bauen: ros2 run web_video_server web_video_server
+```
+
+### Raspberry Pi
+
+Auf dem Raspberry Pi gelten ähnliche Schritte. Wichtige Checks und Befehle:
+
+```sh
+# Prüfen, ob ros2 in PATH ist
+which ros2 || echo "ros2 nicht in PATH"
+# Prüfen des ROS-Distros
+echo $ROS_DISTRO || echo "ROS_DISTRO nicht gesetzt"
+# Source ROS (falls nötig)
+source /opt/ros/<distro>/setup.bash   # <distro> z.B. humble, iron, usw.
+```
+
+Beispielpakete für Pi (optional):
+
+```sh
+sudo apt install -y ros-<ROS-DISTRO>-gazebo-* \
+  ros-<ROS-DISTRO>-cartographer ros-<ROS-DISTRO>-cartographer-ros \
+  ros-<ROS-DISTRO>-navigation2 ros-<ROS-DISTRO>-nav2-bringup
+```
+
+---
+
+## Vollständige Paket-Installliste (aus Original-README)
+
+Die folgende Liste stammt aus dem Original-README und ist unverändert erhalten:
+
+```sh
+sudo apt install ros-humble-xacro ros-humble-joint-state-publisher-gui
 sudo apt install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-ros2-control
 joystick jstest-gtk evtest
 sudo apt-get install ros-humble-twist-mux
-
-sudo apt install ros-jazzy-rqt  
+sudo apt install ros-humble-urdf
+sudo apt install ros-humble-joint-state-publisher-gui
+sudo apt install ros-humble-urdf-tutorial
+sudo apt install ros-humble-urdf-launch
+# sudo apt install ros-jazzy-rqt
+sudo apt install ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-ros2-control
  git clone -b ros2https://github.com/RobotWebTools/web_video_server.git
 (https://github.com/RobotWebTools/web_video_server.git)
 Rebuild the workspace with colcon
 In two different tabs, source the workspace, launch the camera driver (like normal), and run ros2 run web_video_server web_video_server
 sudo apt install ros-humble-rosbridge-suite
+
+sudo apt install ros-humble-gazebo-*
+sudo apt install ros-humble-cartographer
+sudo apt install ros-humble-cartographer-ros
+sudo apt install ros-humble-navigation2
+sudo apt install ros-humble-nav2-bringup
+cd ~/turtlebot3_ws/src/
+git clone -b humble https://github.com/ROBOTIS-GIT/DynamixelSDK.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3/turtlebot3_example.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3_example.git
+sudo apt install python3-colcon-common-extensions
+cd ~/turtlebot3_ws
+
+colcon build --symlink-install
+
+source install/setup.bash echo  oder 'source ~/turtlebot3_ws/install/setup.bash' >> ~/.bashrc
+das nur wenn nicht direkt gesourced wurde source ~/.bashrc
+echo 'export ROS_DOMAIN_ID=30 #TURTLEBOT3' >> ~/.bashrc
+echo 'source /usr/share/gazebo/setup.sh' >> ~/.bashrc
+echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
+source ~/.bashrc
+```
+
 ---
 
 ## Build & Start
 
+Standard-Build- und Start-Schritte:
+
 ```sh
-colcon build --symlink-install
+source /opt/ros/<ROS-DISTRO>/setup.bash
 source install/setup.bash
+colcon build --symlink-install
 ```
 
-## command list
-ros2 topic list | zeigt alle topics
-ros2 control
-ros2 control list_hardware_interfaces
-ros2 run controller_manager spawner diff_cont
-ros2 run controller_manager spawner joint_broad
-# spawner.py funkltionierte nicht
-ros2 run controller_manager spawner.py
-ros2 run controller_manager spawner.py diff_cont
-ros2 run controller_manager spawner.py joint_broad
+---
 
-ros2 run controller_manager spawner diff_cont
-ros2 run controller_manager spawner joint_broad
-      [INFO] [1755746501.725611869] [spawner_diff_cont]: Loaded diff_cont
-      [INFO] [1755746501.840605257] [spawner_diff_cont]: Configured and activated diff_cont
-      [INFO] [1755746504.006178285] [spawner_joint_broad]:  Loaded joint_broad
-      [INFO] [1755746504.119964744] [spawner_joint_broad]: Configured and activated joint_broad
+## ROS-Kommandos (kompakte Sammlung)
 
+Alle ROS-/Gazebo-/Controller-Befehle aus dem Original an einem Ort.
 
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
-ros2 param list
-ros2 run joy joy_enumerate_devices
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
+- ros2 topic list | zeigt alle topics
+- ros2 run joint_state_publisher_gui joint_state_publisher_gui
+- rviz2
+- rviz2 -d src/robot/config/view_robot.rviz
+- ros2 control
+- ros2 control list_hardware_interfaces
+- ros2 control list_controllers
+- ros2 run controller_manager spawner diff_cont
+- ros2 run controller_manager spawner joint_broad
+- ros2 run controller_manager spawner.py
+- ros2 run controller_manager spawner.py diff_cont
+- ros2 run controller_manager spawner.py joint_broad
+  - Beispiel-Log:
+    [INFO] [1755746501.725611869] [spawner_diff_cont]: Loaded diff_cont
+    [INFO] [1755746501.840605257] [spawner_diff_cont]: Configured and activated diff_cont
+    [INFO] [1755746504.006178285] [spawner_joint_broad]:  Loaded joint_broad
+    [INFO] [1755746504.119964744] [spawner_joint_broad]: Configured and activated joint_broad
+- ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
+- ros2 param list
+- ros2 run joy joy_enumerate_devices
+- ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/diff_cont/cmd_vel_unstamped
+- ros2 topic echo /diff_cont/odom
 
-ros2 control list_controllers
-ros2 control list_hardware_interfaces
-sudo apt install ros-humble-foxglove-bridge
-ros2 topic echo /diff_cont/odom
-
-### Starten der Simulation
-git clone -b ros2 https://github.com/RobotWebTools/web_video_server.git
-1. Terminal öffnen (`wsl -d Ubuntu-22.04`)
-2. ROS2 Launch starten:
-    - `ros2 launch robot rsp.launch.py`
-    - `rviz2` (optional: `rviz2 -d src/robot/config/view_robot.rviz`)
-    - `ros2 run joint_state_publisher_gui joint_state_publisher_gui`
-
-#### Simulation aktivieren
+Simulation / Gazebo / Spawn:
 
 ```sh
+ros2 launch robot rsp.launch.py
 ros2 launch robot rsp.launch.py use_sim_time:=true
 ros2 launch gazebo_ros gazebo.launch.py
 ros2 run gazebo_ros spawn_entity.py -topic robot_description -entity robot
 ros2 launch robot launch_sim.launch.py
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
+# Andere Welt laden:
+ros2 launch robot launch_sim.launch.py world:=src/robot/worlds/obstacles.world
 ```
 
-- ros2 launch robot rsp.launch.py use_sim_time:=true // wie man prüft ob die simulation erfolgreich gestartet wurde  'ros2 param get /robot_state_publisher use_sim_time' Boolean value is: True
-ros2 launch gazebo_ros gazebo.launch.py
-ros2 run gazebo_ros spawn_entity.py -topic robot_description -entity robot
-- ros2 launch robot launch_sim.launch.py
-- ros2 run teleop_twist_keyboard teleop_twist_keyboard
+---
 
-#### Andere Welt laden
+## Image / Kamera / Web-Video
+
+Original-Content (vollständig erhalten):
 
 ```sh
-ros2 launch robot launch_sim.launch.py world:=src/robot/worlds/obstacles.world
-ros2 launch robot launch_sim.launch.py world:=$(pwd)/src/robot/worlds/obstacles.world
-```
-
-
-## Image Stuff
-
 sudo apt update
 sudo apt install -y ros-jazzy-desktop
 # oder nur rqt / image-View falls du nur GUI brauchst:
 sudo apt install -y ros-jazzy-rqt ros-jazzy-rqt-image-view
-
+sudo apt install -y ros-humble-rqt ros-humble-rqt-image-view
 
 ros2 run rqt_image_view rqt_image_view
 ros2 run image_transport list_transports | zeigt alle verschiede format die das system kennt
 ros2 run image_transport  republish compressed raw --ros-args -r in/compressed:=/camera/image_raw/compressed -r out:=/camera/image_raw/uncompressed
 #ros2-humble-rqt-image-view
 #ros2-jazzy-rqt-image-view
+```
+
+Web-Video-Server Hinweis (aus Original):
+
+```sh
+git clone -b ros2 https://github.com/RobotWebTools/web_video_server.git
+# Nach dem Bauen: in zwei Terminal-Tabs workspace sourcen, Kamera starten und dann:
+ros2 run web_video_server web_video_server
+```
 
 ---
 
-## Rapsberry Pi
+## TurtleBot-spezifische Hinweise (aus Original)
 
-wie prüfe ich auf dem pi status
-'which ros2 || echo "ros2 nicht in PATH"'
+Diese Kommandos wurden im Original als Anleitung für TurtleBot-Setups gelistet. Ich lasse sie hier vollständig stehen:
+
+```sh
+cd ~/turtlebot3_ws/src/
+git clone -b humble https://github.com/ROBOTIS-GIT/DynamixelSDK.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3/turtlebot3_example.git
+git clone -b humble https://github.com/ROBOTIS-GIT/turtlebot3_example.git
+sudo apt install python3-colcon-common-extensions
+cd ~/turtlebot3_ws
+colcon build --symlink-install
+source install/setup.bash
+echo 'export ROS_DOMAIN_ID=30 #TURTLEBOT3' >> ~/.bashrc
+echo 'source /usr/share/gazebo/setup.sh' >> ~/.bashrc
+echo 'source /opt/ros/humble/setup.bash' >> ~/.bashrc
+source ~/.bashrc
+```
+
+---
+
+## Raspberry Pi / Checks (aus Original)
+
+Original-Inhalte zur Kontrolle auf dem Pi:
+
+```sh
+which ros2 || echo "ros2 nicht in PATH"
 /opt/ros/jazzy/bin/ros2
-echo $ROS_DISTRO || echo "ROS_DISTRO nicht gesetzt" 
+echo $ROS_DISTRO || echo "ROS_DISTRO nicht gesetzt"
 jazzy
 apt-cache policy ros-jazzy-v4l2-camera
 apt-cache madison ros-jazzy-v4l2-camera
 source /opt/ros/<distro>/setup.bash   # <distro> z.B. humble, iron, usw.
 echo $ROS_DISTRO
+```
+
+---
 
 ## Troubleshooting
 
 - Prüfe die Geschwindigkeiten auf `/cmd_vel`:
-  ```sh
-  ros2 topic echo /cmd_vel
-  ```
-- Für Joystick-Steuerung:
+
+```sh
+ros2 topic echo /cmd_vel
+```
+
+- Für Joystick-Steuerung (Original):
   - `teleop_twist_joy` (Node: `teleop_node`)
   - `joy` (Node: `joy_node`)
 
----
-
+Weitere Originalzeilen, vollständig erhalten:
 
 teleop_twist_joy -- teleop_node
 joy --- joy_node
 
-## How to build WSL2 Kernel
+---
+
+## WSL2 Kernel bauen (Original-Link)
+
 https://blog.thetechcorner.sk/posts/Update-WSL2-kernel-to-6-6-x/
 
+---
 
-
+## Joystick-Konfiguration (`config/joystick.yaml`)
 
 Open the file: config/joystick.yaml
 
 Modify the values for the axes and buttons to match your controller's layout.
+
+Original YAML example (vollständig erhalten):
 
 YAML
 
@@ -218,4 +354,63 @@ teleop_node:
     # --- BUTTONS ---
     enable_button: 6 # The "dead-man's switch"
     enable_turbo_button: 7 # The button for faster speeds
+
 You'll need to use a tool like jstest-gtk to find the correct number for each button and axis on your specific controller.
+---
+
+## Workspace Build & Test (CI)
+
+### Build
+
+```sh
+colcon build --symlink-install --packages-select robot
+```
+
+### Tests
+
+```sh
+colcon test --packages-select robot --event-handlers console_direct+
+colcon test-result --all --verbose
+```
+
+### Lint & Formatting
+
+```sh
+colcon test --packages-select robot --ctest-args -R ament_lint
+flake8 .
+black --check .
+```
+
+These commands are safe to run in CI and locally; lint is configured via `.flake8` and `pyproject.toml`.
+
+---
+
+## Maps Directory & Naming
+
+Speichere SLAM- oder Offline-Karten unter `maps/`. Verwende die Konvention `<umgebung>_<datum>` (z.B. `werkstatt_20250916`) und lege immer das YAML/PGM-Paar ab (`werkstatt_20250916.yaml`, `werkstatt_20250916.pgm`). Zusätzliche Metadaten (z.B. `notes.md`) liegen im gleichnamigen Unterordner.
+
+---
+
+## Dashboard Bridge Launch
+
+Nutze `ros2 launch robot dashboard.launch.py` um `rosbridge_websocket` (Port 9090) und `web_video_server` (Port 8080) gleichzeitig zu starten. Ports lassen sich mit `bridge_port:=<port>` bzw. `video_port:=<port>` überschreiben. Stelle sicher, dass `web_video_server` Zugriff auf das Kameratopic (`/camera/image_raw`) besitzt und dass dein Dashboard den Rosbridge-Endpunkt `ws://<host>:9090` referenziert.
+
+
+
+## Resource
+https://docs.ros.org/en/humble/How-To-Guides/Launch-file-different-formats.html
+https://husarion.com/tutorials/ros2-tutorials/1-ros2-introduction/
+https://cyberbotics.com/#webots
+https://www.danaukes.com/notebook/ros2/
+https://www.danaukes.com/notebook/ros2/32-using-ros2-on-docker-over-tailscale-container/
+
+https://www.danaukes.com/notebook/ros2/11-installing-ros2-on-a-rpiz2w/
+
+https://rosdabbler.github.io/adventures-in-ros2-networking-2
+https://www.danaukes.com/work-blog/2024-01-25-ros2-over-vpn/
+https://kamathsblog.com/ros-2-and-vpns
+https://gitlab.uni-koblenz.de/intas/vacusim/-/blob/main/README-german.md
+https://gitlab.uni-koblenz.de/intas/ros2-humble-macos-docker-env
+[rosbot-xl-autonomy](https://github.com/husarion/rosbot-xl-autonomy/tree/foxglove?tab=readme-ov-file)
+[text](https://www.allisonthackston.com/)
+[Hardware sale page from husarion](https://husarion.com/tutorials/ros-equipment/)

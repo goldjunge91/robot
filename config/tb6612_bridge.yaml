@@ -1,0 +1,8 @@
+tb6612_bridge:
+  ros__parameters:
+    port: "/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"
+    baud: 115200
+    send_hz: 20.0
+    max_lin: 0.30
+    max_ang: 1.00
+    mix: 0.5

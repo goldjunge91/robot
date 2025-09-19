@@ -19,4 +19,6 @@
     <xacro:include filename="camera.xacro" />
     <!-- <xacro:include filename="depth_camera.xacro" /> -->
     <xacro:include filename="face.xacro" />
+    <xacro:include filename="common_macros.xacro" />
+    
 </robot>

@@ -1,0 +1,21 @@
+# Ignore build artifacts
+build/
+install/
+log/
+
+# Ignore git and IDE files
+.git/
+.vscode/
+.kiro/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore macOS files
+.DS_Store
+
+# Ignore virtual environments
+.venv/
+venv/

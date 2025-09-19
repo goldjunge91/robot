@@ -1,0 +1,46 @@
+# BLOCK 1: Konfiguration für den Controller Manager
+# Hier werden die Controller nur deklariert, damit der Manager weiß, welche Plugins er laden muss.
+controller_manager:
+  ros__parameters:
+    update_rate: 30
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    mecanum_drive_controller:
+      type: mecanum_drive_controller/MecanumDriveController
+
+# BLOCK 2: Parameter für den Mecanum Drive Controller (ROS 2 Humble)
+# Die Humble-Version erwartet die folgenden Parameternamen/Struktur.
+mecanum_drive_controller:
+  ros__parameters:
+    # Timeout, wenn keine Geschwindigkeit referenziert wird (Sekunden)
+    reference_timeout: 0.5
+
+    # Gelenknamen für die Befehls-Schnittstellen (velocity command)
+    front_left_wheel_command_joint_name:  "front_left_wheel_joint"
+    front_right_wheel_command_joint_name: "front_right_wheel_joint"
+    rear_right_wheel_command_joint_name:  "rear_right_wheel_joint"
+    rear_left_wheel_command_joint_name:   "rear_left_wheel_joint"
+
+    # Optional: Falls State-Joints anders heißen. Hier identisch zu den Command-Joints.
+    front_left_wheel_state_joint_name:  "front_left_wheel_joint"
+    front_right_wheel_state_joint_name: "front_right_wheel_joint"
+    rear_right_wheel_state_joint_name:  "rear_right_wheel_joint"
+    rear_left_wheel_state_joint_name:   "rear_left_wheel_joint"
+
+    # Kinematik-Parameter
+    # wheels_radius: Radius der Räder (m). Aus URDF: wheel_radius = 0.033
+    # sum_of_robot_center_projection_on_X_Y_axis: |x_offset| + |y_offset| vom Roboterzentrum zum Rad (m)
+    # In robot_core.xacro: wheel_offset_x=0.12, wheel_offset_y=0.1485 -> Summe = 0.2685
+    kinematics:
+      wheels_radius: 0.033
+      sum_of_robot_center_projection_on_X_Y_axis: 0.2685
+
+    # Frames und TF
+    base_frame_id: base_link
+    odom_frame_id: odom
+    enable_odom_tf: true
+
+    # Eingangs-Typ für /cmd_vel: false = Twist (unstamped), true = TwistStamped
+    use_stamped_vel: false

@@ -1,0 +1,17 @@
+// {
+//   "servers": {
+//     "ros2-mcp-server": {
+//       "command": "python",
+//       "args": [
+//         "-u",
+//         "C:/GIT/ros2-mcp-server/ros2-mcp-server.py"
+//       ],
+//       "options": {
+//         "cwd": "C:/GIT/ros2-mcp-server",
+//         "env": {
+//           "PYTHONUNBUFFERED": "1"
+//         }
+//       }
+//     }
+//   }
+// }

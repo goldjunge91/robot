@@ -1,10 +1,11 @@
 import os
 
+import os
 from ament_index_python.packages import get_package_share_directory
 
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, TimerAction
+from launch.actions import IncludeLaunchDescription, TimerAction, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command
 from launch.actions import RegisterEventHandler
@@ -34,6 +35,10 @@ def generate_launch_description():
     robot_description = Command(
         ["ros2 param get --hide-type /robot_state_publisher robot_description"]
     )
+
+    # controller_params_file = os.path.join(
+    #     get_package_share_directory(package_name), "config", "my_controllers.yaml"
+    # )
 
     controller_params_file = os.path.join(
         get_package_share_directory(package_name), "config", "my_controllers.yaml"
@@ -89,6 +94,19 @@ def generate_launch_description():
     #
     # Replace the diff_drive_spawner in the final return with delayed_diff_drive_spawner
 
+    # --------------------- NEU (minimal) ---------------------
+    # Start the tb6612_bridge.py directly as a Python process from the package share
+    tb6612_script = os.path.join(
+        get_package_share_directory(package_name), "raspberrypi", "tb6612_bridge.py"
+    )
+
+    tb6612_bridge_proc = ExecuteProcess(
+        cmd=["python3", tb6612_script],
+        name="tb6612_bridge",
+        output="screen",
+    )
+    # ---------------------------------------------------------
+
     # Launch them all!
     return LaunchDescription(
         [
@@ -96,5 +114,7 @@ def generate_launch_description():
             delayed_controller_manager,
             delayed_diff_drive_spawner,
             delayed_joint_broad_spawner,
+             # -------- NEU: Bridge starten --------
+            # tb6612_bridge_proc,
         ]
     )

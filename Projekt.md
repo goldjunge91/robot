@@ -1,96 +1,60 @@
+# Projektbeschreibung: Omnidirektionaler ROS2-Roboter
 
+## 1. Vision & Zielsetzung
 
-# Omnidirectional Robot — Projektbeschreibung
+Ziel dieses Projekts ist die Entwicklung einer kostengünstigen, modularen und leistungsfähigen mobilen Roboterplattform, die auf dem **Robot Operating System 2 (ROS2)** basiert. Die Plattform dient als Alternative zu kommerziellen Systemen wie dem TurtleBot und kombiniert fortschrittliche Navigationsfähigkeiten mit einer interaktiven, durch Computer Vision gesteuerten Funktion: einem Nerf-Dart-Launcher, der Gesichter erkennen und anvisieren kann.
 
-Ziel
+Das Projekt verbindet anspruchsvolle Robotik-Konzepte wie **autonome Navigation (SLAM)** und Sensorfusion mit unterhaltsamen, interaktiven Elementen.
 
-Aufbau einer omnidirektionalen Plattform mit Mecanum-Antrieb zur Fernsteuerung und für spätere Computer-Vision-gestützte Assistenzfunktionen.
+## 2. Kernfunktionen
 
-Scope
+* **Omnidirektionale Mobilität:** Dank des Mecanum-Radantriebs kann sich der Roboter frei in alle Richtungen bewegen (vorwärts/rückwärts, seitwärts, diagonal) und auf der Stelle drehen.
 
-Enthalten sind mechanisches Chassis mit Mecanum-Rädern, Antriebs- und Leistungs-elektronik, Basis-Sensorik, Steuer- und Recheneinheiten sowie Telemetrie- und Logging-Funktionen. Externe Infrastruktur (Netzwerk, Ladeinfrastruktur) wird nicht beschrieben.
+* **Autonome Navigation & Kartierung:** Mithilfe eines LiDAR-Sensors und eines 9-Achsen-IMU (Inertial Measurement Unit) ist der Roboter in der Lage, seine Umgebung zu kartieren (SLAM) und sich darin autonom zu lokalisieren und zu bewegen.
 
-Features
+* **Hinderniserkennung:** Ein VL53L0X Time-of-Flight-Sensor liefert zusätzliche Distanzdaten zur Erkennung von nahen Objekten und zur Unterstützung der Navigation.
 
-- Omnidirektionale Fahrt (seitwärts, diagonal, Rotation auf der Stelle)
-- Individuelle PWM-Steuerung der Antriebs-motoren
-- Onboard-Strom-/Spannungs-Monitoring für Batterie-Überwachung
-- Abstandsmessung für Hinderniserkennung
-- USB-Kamera-Integration für CV und Video-Streaming
+* **Intelligenter Nerf-Launcher:** Eine integrierte USB-Kamera ermöglicht die Implementierung von Computer-Vision-Algorithmen. Das primäre Anwendungsziel ist die **Gesichtserkennung**, um den Nerf-Launcher automatisch auf erkannte Personen auszurichten und auf Befehl abzufeuern.
 
-Komponentenliste
+* **Fernsteuerung & Telemetrie:** Der Roboter kann manuell über einen Xbox-Controller gesteuert werden. Ein Web-Dashboard visualisiert wichtige Telemetriedaten wie Batteriestatus und Sensordaten in Echtzeit.
 
-RUNCCI-YUN 8pcs TT Motoren
-Mecanum-Radsatz 80mm
-TB6612FNG Motor Driver
-INA3221 3-Kanal Sensor
-EVE INR18650-25P
-3S Lademodul USB-C 4A
-Load Sharing Components
-TP4056 Lademodule
-MicroSD Modul
-16GB MicroSD
-3S 10A Li-Ion Batterieschutzplatine
-18650 Batteriehalter
-ADS1115 16-Bit ADC
-TCA9548A I2C Multiplexer
-VL53L0X
-TM1637 LED-Anzeigemodul
-TT-Motoren 4er Set
-Raspberry Pi 4B 8GB
-ESP32
-USB-Kameras (1080p)
-Displays (10", 5")
-9g Servos
-3D-Drucker
-Xbox Controller
-Verkabelung / Jumper
+## 3. Systemarchitektur
 
-Systemarchitektur
+Die Architektur ist in zwei Steuerungsebenen unterteilt, um eine effiziente Aufgabenverteilung zu gewährleisten:
 
-- Steuer- und Wahrnehmungsebene: Raspberry Pi 4B führt CV, Benutzer-Interface und Telemetrie zusammen; USB-Kameras sind direkt am Pi angeschlossen.
-- BMS- und Telemetrieebene: ESP32 sammelt INA3221-Messdaten und loggt auf MicroSD; ESP32 stellt Telemetrie per WiFi/Serial zur Verfügung.
-- Motorsteuerung: TB6612FNG-Module erhalten PWM/DIR-Signale von Pi oder MCU zur Ansteuerung der DC-Motoren, Motorstromversorgung über die Akku-/Power-Ebene.
-- Sensorbus: INA3221, ADS1115 und VL53L0X sind per I2C angebunden; bei Adresskonflikten kann ein I2C-Multiplexer eingesetzt werden.
-- Energie- und Ladeebene: 3S-Akku, Batterieschutzplatine und Lademodule versorgen Motor- und Elektronikspannungen; Load-Sharing-Hardware steuert Ladebetrieb und Versorgung.
+1. **High-Level-Steuerung (Raspberry Pi 4B):**
 
-Kommunikation und Bedienung
+   * **Gehirn des Roboters:** Führt das ROS2-Framework aus.
 
-- Xbox-Controller (Bluetooth/USB) oder Smartphone-App für manuelle Steuerung
+   * **Aufgaben:** Verarbeitet Daten von LiDAR, Kamera und Abstandssensoren, führt SLAM-Algorithmen aus, plant Pfade, hostet das Web-Dashboard und führt die Gesichtserkennungs-Software aus.
 
-- WiFi-Interface (über Pi oder ESP32) für Telemetrie, Web-Dashboard und OTA
+   * **Kommunikation:** Sendet hochrangige Bewegungsbefehle (z.B. "fahre nach links mit 0,5 m/s") an die Low-Level-Steuerung.
 
-t Systems (BMS). Budgetziel: < 100€.
+2. **Low-Level-Steuerung (Raspberry Pi Pico):**
 
-Kernentscheidungen
-- Antrieb: Mecanum-Räder (omnidirektional)
-- Motor-Treiber: TB6612FNG
-- Batterie-Monitoring: INA3221 (3-Kanal)
-- Batterie: 3S (11.1 V)
-- Steuerung: Raspberry Pi 4B (bereits vorhanden) + ESP32 für BMS
+   * **Echtzeit-Controller:** Verantwortlich für die direkte, präzise Ansteuerung der Hardware.
 
-Bestandsüberischt
-Bereits vorhanden (vorhanden)
-- Raspberry Pi 4B 8GB
-- ESP32 (mehrere)
-- USB-Kameras (2x 1080p)
-- Displays (10", 5")
-- 9g Servos (2x)
-- 3D-Drucker
-- Xbox Controller
-- Verkabelung/Jumper
-- TB6612FNG Motor Driver (3)
-- INA3221 3-Kanal Sensor (2)
-- TP4056 Lademodule (10)
-- TT-Motoren 4er Set (1)
-- 3S USB-C Lademodule (3)
-- 3S Batterieschutzplatinen (2)
-- 18650 Batteriehalter (3)
-- ADS1115 ADC (2)
-- TCA9548A I2C-Multiplexer (3)
-- VL53L0X Abstandssensor (1)
-- TM1637 LED-Display (1)
-- Mecanum-Räder 80 mm (Set) — erforderlich für omnidirektionales Fahren
-- 3x 18650-Zellen (für 3S-Pack) — Batterien fehlen
-- Load-Sharing-Bauteile (IRF4905 P‑MOSFET, 1N5819 Schottky, 10 kΩ Widerstände, Perfboard)
+   * **Aufgaben:** Empfängt Befehle vom Pi 4B und übersetzt sie in exakte PWM-Signale für die vier DC-Motortreiber (TB6612FNG). Steuert die Servos und Brushless-Motoren des Nerf-Launchers.
 
+   * **Vorteil:** Entlastet den Raspberry Pi 4B von Echtzeitaufgaben und sorgt für eine zuverlässige und jitterfreie Motorsteuerung.
+
+## 4. Technische Komponenten
+
+| **Kategorie** | **Komponente** | **Zweck** |
+| **Chassis & Antrieb** | 4x DC-Getriebemotoren (GM3865-520) mit Hall-Encodern | Kraftvoller Antrieb und Feedback zur Raddrehung |
+|  | 4x 80mm Mecanum-Räder | Ermöglichen die omnidirektionale Bewegung |
+|  | 4x TB6612FNG Motortreiber | Ansteuerung der DC-Motoren |
+| **Steuerung & Sensorik** | Raspberry Pi 4B (8GB) | High-Level-Steuerung, ROS2, Computer Vision |
+|  | Raspberry Pi Pico | Low-Level-Steuerung (Motoren, Servos) |
+|  | Lidar LDS01RR | 360°-Umgebungsscans für SLAM |
+|  | ICM-20948 (9-DoF IMU) | Erfassung von Beschleunigung, Rotation und Ausrichtung (Sensorfusion) |
+|  | VL53L0X Time-of-Flight-Sensor | Präzise Abstandsmessung für Hinderniserkennung |
+|  | USB-Kamera (1080p) | Video-Streaming und Input für die Gesichtserkennung |
+| **Nerf-Launcher** | 2x RS2205 Brushless-Motoren & 2x 40A ESCs | Beschleunigung der Nerf-Darts |
+|  | 1x Digital-Servo (22kg) & 1x 9g Servo | Zielen des Launchers (Pan/Tilt) |
+| **Energieversorgung** | 3S Li-Ion Akku-Pack (18650 Zellen) | Mobile Stromversorgung |
+|  | 3S Batterieschutzplatine (BMS) | Schutz vor Überladung, Tiefentladung und Kurzschluss |
+|  | INA3221 Sensor | Überwachung von Spannung und Stromverbrauch |
+| **Bedienung & Interface** | Xbox Controller | Manuelle Fernsteuerung |
+|  | 10" / 5" Display | Lokale Anzeige von Statusinformationen oder Kamerabild |
+|  | TM1637 LED-Anzeige | Schnelle Anzeige von Statuscodes oder Werten |
