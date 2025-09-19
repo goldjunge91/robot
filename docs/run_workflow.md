@@ -41,12 +41,12 @@ ros2 launch robot launch_sim.launch.py
 
 Alternative: manual spawn (if Gazebo is running and /robot_description is published)
 ```sh
-ros2 run gazebo_ros spawn_entity.py -topic robot_description -entity my_bot
+ros2 run gazebo_ros spawn_entity.py -topic robot_description -entity robot
 ```
 
 | command   |   arg1 | value1 | description |  arg2    |  value2  |
 |--- |--- |--- |--- |--- |--- |
-|  `ros2 run gazebo_ros spawn_entity.py`  |`-topic`    |  `robot_description`  |Spawn entity from URDF on this topic | `-entity`   | `my_bot` |
+|  `ros2 run gazebo_ros spawn_entity.py`  |`-topic`    |  `robot_description`  |Spawn entity from URDF on this topic | `-entity`   | `robot` |
 |    |    |    | Must match robot_state_publisher output   |    |    |
 
 ```sh
@@ -106,7 +106,7 @@ ros2 launch robot joystick_xbox_mecanum_pico.launch.py
 ```
 
 Notes
-- Package name: `robot`; simulation spawns entity `my_bot` (as in `launch_sim.launch.py`).
+- Package name: `robot`; simulation spawns entity `robot` (as in `launch_sim.launch.py`).
 - Mecanum controller: topic `cmd_vel` (unstamped) per `config/my_controllers_mecanum.yaml`.
 - RViz example: `rviz2 -d src/robot/config/view_robot.rviz`.
 - If joystick isn’t detected: verify `/dev/input/js0` permissions; install `joystick jstest-gtk` and test with `jstest-gtk`.
