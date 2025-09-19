@@ -1,20 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:unless value="$(arg sim_mode)">
-        <ros2_control name="RealRobot" type="system">
+    <xacro:if value="$(arg sim_mode)">
+        <ros2_control name="GazeboSystem" type="system">
             <hardware>
-                <plugin>drive_arduino/TB6612HardwareInterface</plugin>
-                <param name="drive_type">mecanum</param>
-                <param name="has_encoders">false</param>
-                <param name="front_left_wheel_name">front_left_wheel_joint</param>
-                <param name="front_right_wheel_name">front_right_wheel_joint</param>
-                <param name="rear_left_wheel_name">rear_left_wheel_joint</param>
-                <param name="rear_right_wheel_name">rear_right_wheel_joint</param>
-                <param name="loop_rate">30</param>
-                <param name="device">/dev/ttyUSB0</param>
-                <param name="baud_rate">115200</param>
-                <param name="timeout">50</param>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
             </hardware>
             <joint name="front_left_wheel_joint">
                 <command_interface name="velocity"/>
@@ -37,6 +27,22 @@
                 <state_interface name="velocity"/>
             </joint>
         </ros2_control>
+    </xacro:if>
+
+    <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+            <parameters>$(find robot)/config/my_controllers_mecanum.yaml</parameters>
+            <parameters>$(find robot)/config/gaz_ros2_ctl_use_sim.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+</robot>
+
+
+<!-- <?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:unless value="$(arg sim_mode)">
     </xacro:unless>
 
     <xacro:if value="$(arg sim_mode)">
@@ -69,8 +75,9 @@
 
     <gazebo>
         <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-            <parameters>$(find robot)/config/my_controllers_mecanum.yaml</parameters>
+            <parameters>$(find robot)/config/my_controllers_mecanum_v2.yaml</parameters>
+            <parameters>$(find robot)/config/gaz_ros2_ctl_use_sim.yaml</parameters>
         </plugin>
     </gazebo>
 
-</robot>
+</robot> -->
