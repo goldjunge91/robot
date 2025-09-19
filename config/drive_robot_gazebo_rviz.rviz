@@ -8,7 +8,10 @@ Panels:
         - /Status1
         - /TF1
         - /RobotModel1
+        - /RobotModel1/Status1
         - /LaserScan1
+        - /LaserScan1/Status1
+        - /LaserScan1/Topic1
         - /Camera1
         - /Image1
         - /Image1/Topic1
@@ -60,21 +63,27 @@ Visualization Manager:
         All Enabled: true
         base_link:
           Value: true
+        bottom_plate:
+          Value: true
         camera_link:
           Value: true
         camera_link_optical:
           Value: true
-        caster_wheel:
-          Value: true
         chassis:
+          Value: true
+        face_link:
+          Value: true
+        front_left_wheel:
+          Value: true
+        front_right_wheel:
           Value: true
         laser_frame:
           Value: true
-        left_wheel:
-          Value: true
         odom:
           Value: true
-        right_wheel:
+        rear_left_wheel:
+          Value: true
+        rear_right_wheel:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -85,17 +94,23 @@ Visualization Manager:
         odom:
           base_link:
             chassis:
+              bottom_plate:
+                {}
               camera_link:
                 camera_link_optical:
                   {}
-              caster_wheel:
+              face_link:
+                {}
+              front_left_wheel:
+                {}
+              front_right_wheel:
                 {}
               laser_frame:
                 {}
-            left_wheel:
-              {}
-            right_wheel:
-              {}
+              rear_left_wheel:
+                {}
+              rear_right_wheel:
+                {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -120,6 +135,11 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        bottom_plate:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         camera_link:
           Alpha: 1
           Show Axes: false
@@ -129,12 +149,22 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        caster_wheel:
+        chassis:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        chassis:
+        face_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_left_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_right_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -144,12 +174,12 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        left_wheel:
+        rear_left_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_wheel:
+        rear_right_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
