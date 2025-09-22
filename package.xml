@@ -12,15 +12,15 @@
   <!-- Core robot functionality -->
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>xacro</exec_depend>
-  
+
   <!-- Control system -->
   <exec_depend>ros2_control</exec_depend>
   <exec_depend>ros2_controllers</exec_depend>
   <exec_depend>controller_manager</exec_depend>
-  
+
   <!-- For simulation (optional) -->
   <exec_depend>gazebo_ros2_control</exec_depend>
-
+  <exec_depend>gazebo_ros</exec_depend>
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
   <test_depend>ament_cmake_pytest</test_depend>
