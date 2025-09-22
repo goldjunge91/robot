@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:include filename="inertial_macros.xacro"/>
     <xacro:include filename="common_macros.xacro"/>
@@ -58,7 +58,7 @@
 
 
     <!-- CHASSIS LINK -->
-<!-- 
+    <!-- 
     <joint name="chassis_joint" type="fixed">
         <parent link="base_link"/>
         <child link="chassis"/>
@@ -91,7 +91,7 @@
     <gazebo reference="chassis">
         <material>Gazebo/Orange</material>
     </gazebo>
-        
+
     <joint name="bottom_plate_joint" type="fixed">
         <parent link="chassis"/>
         <child link="bottom_plate"/>
@@ -120,7 +120,7 @@
         <material>Gazebo/Black</material>
     </gazebo>
     <!-- LEFT WHEEL LINK -->
-<!-- 
+    <!-- 
     <joint name="left_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child link="left_wheel"/>
@@ -177,10 +177,14 @@
     <gazebo reference="right_wheel">
         <material>Gazebo/Blue</material></gazebo> -->
 
-    <xacro:create_wheel name="front_left_wheel"  x_offset="${wheel_offset_x}" y_offset="${wheel_offset_y}"/>
-    <xacro:create_wheel name="front_right_wheel" x_offset="${wheel_offset_x}" y_offset="-${wheel_offset_y}"/>
-    <xacro:create_wheel name="rear_left_wheel"   x_offset="-${wheel_offset_x}" y_offset="${wheel_offset_y}"/>
-    <xacro:create_wheel name="rear_right_wheel"  x_offset="-${wheel_offset_x}" y_offset="-${wheel_offset_y}"/>
+    <xacro:create_wheel name="front_left_wheel" joint_name="front_left_wheel_joint" x_offset="${wheel_offset_x}" y_offset="${wheel_offset_y}"/>
+    <xacro:create_wheel name="front_right_wheel" joint_name="front_right_wheel_joint" x_offset="${wheel_offset_x}" y_offset="-${wheel_offset_y}"/>
+    <xacro:create_wheel name="rear_left_wheel" joint_name="rear_left_wheel_joint" x_offset="-${wheel_offset_x}" y_offset="${wheel_offset_y}"/>
+    <xacro:create_wheel name="rear_right_wheel" joint_name="rear_right_wheel_joint" x_offset="-${wheel_offset_x}" y_offset="-${wheel_offset_y}"/>
+    <!-- <xacro:create_wheel name="front_left_wheel" x_offset="${wheel_offset_x}" y_offset="${wheel_offset_y}"/>
+<xacro:create_wheel name="front_right_wheel" x_offset="${wheel_offset_x}" y_offset="-${wheel_offset_y}"/>
+<xacro:create_wheel name="rear_left_wheel" x_offset="-${wheel_offset_x}" y_offset="${wheel_offset_y}"/>
+<xacro:create_wheel name="rear_right_wheel" x_offset="-${wheel_offset_x}" y_offset="-${wheel_offset_y}"/> -->
 
     <!-- CASTER WHEEL LINK -->
     <!-- <joint name="caster_wheel_joint" type="fixed">

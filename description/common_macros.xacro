@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:macro name="create_wheel" params="name x_offset y_offset">
+    <xacro:macro name="create_wheel" params="name x_offset y_offset joint_name:=''">
+        <xacro:property name="joint_id" value="${joint_name if joint_name != '' else name + '_joint'}" />
         <link name="${name}">
             <visual>
                 <geometry>
@@ -22,7 +23,7 @@
             </inertial>
         </link>
 
-        <joint name="${name}_joint" type="continuous">
+        <joint name="${joint_id}" type="continuous">
             <parent link="chassis"/>
             <child link="${name}"/>
             <origin xyz="${x_offset} ${y_offset} ${wheel_offset_z}" rpy="-${pi/2} 0 0"/>
