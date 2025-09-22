@@ -55,7 +55,7 @@ def generate_launch_description():
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["diff_cont"],
+        arguments=["drive_controller"],
     )
 
     delayed_diff_drive_spawner = RegisterEventHandler(
