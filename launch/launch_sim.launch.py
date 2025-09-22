@@ -1,14 +1,29 @@
 import os
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, RegisterEventHandler
+from launch.actions import (
+    DeclareLaunchArgument,
+    ExecuteProcess,
+    RegisterEventHandler,
+    IncludeLaunchDescription,
+)
+from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit
-from launch.substitutions import LaunchConfiguration, Command, PythonExpression
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import (
+    LaunchConfiguration,
+    PythonExpression,
+    PathJoinSubstitution,
+)
 from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
+import xacro
 
 def generate_launch_description():
     pkg_share = get_package_share_directory('robot')
+    worlds_dir = os.path.join(pkg_share, 'worlds')
+    models_dir = os.path.join(pkg_share, 'models')
     
         # --- Launch-Argumente ---
     world_arg = DeclareLaunchArgument(
@@ -30,24 +45,58 @@ def generate_launch_description():
         description='Use simulation (Gazebo) clock if true'
     )
 
+    headless_arg = DeclareLaunchArgument(
+        'headless',
+        default_value='true',
+        description='If true, skip gzclient and RViz (headless)'
+    )
+
+    use_gazebo_ros_launch_arg = DeclareLaunchArgument(
+        'use_gazebo_ros_launch',
+        default_value='false',
+        description='Use gazebo_ros/gazebo.launch.py instead of raw gzserver/gzclient when true'
+    )
+
+    with_gazebo_gui_arg = DeclareLaunchArgument(
+        'with_gazebo_gui',
+        default_value='true',
+        description='Start Gazebo client in addition to server'
+    )
+
+    with_rviz_arg = DeclareLaunchArgument(
+        'with_rviz',
+        default_value='true',
+        description='Start RViz2 alongside the simulation'
+    )
+
     # --- Kernkomponenten ---
-    robot_description_config = Command([
-        'xacro ',
+    robot_description_processed = xacro.process_file(
         os.path.join(pkg_share, 'description', 'robot.urdf.xacro'),
-        ' use_ros2_control:=true', ' sim_mode:=true'
-    ])
+        mappings={'use_ros2_control': 'true', 'sim_mode': 'true'}
+    ).toxml()
 
     gzserver_cmd = ExecuteProcess(
         cmd=['gzserver', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so', LaunchConfiguration('world')],
-        output='screen'
+        output='screen',
+        condition=UnlessCondition(LaunchConfiguration('use_gazebo_ros_launch'))
     )
-    gzclient_cmd = ExecuteProcess(cmd=['gzclient'], output='screen')
+    gzclient_cmd = ExecuteProcess(
+        cmd=['gzclient'],
+        output='screen',
+        condition=IfCondition(PythonExpression([
+            '"', LaunchConfiguration('headless'), '" == "false" and "',
+            LaunchConfiguration('use_gazebo_ros_launch'), '" == "false"'
+        ]))
+    )
 
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameters=[{'robot_description': robot_description_config, 'use_sim_time': LaunchConfiguration('use_sim_time')}]
+        parameters=[{
+            'robot_description': robot_description_processed,
+            'use_sim_time': LaunchConfiguration('use_sim_time')
+        }]
     )
     #  robot_state_publisher_node = Node(
     #     package='robot_state_publisher',
@@ -72,7 +121,11 @@ def generate_launch_description():
         name='rviz2',
         arguments=['-d', LaunchConfiguration('rviz_config')],
         output='screen',
-        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}],
+        condition=IfCondition(PythonExpression([
+            '"', LaunchConfiguration('with_rviz'), '" == "true" and "',
+            LaunchConfiguration('headless'), '" == "false"'
+        ]))
     )
 
     joint_state_broadcaster_spawner = Node(
@@ -102,6 +155,23 @@ def generate_launch_description():
         output='screen'
     )
 
+    gazebo_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution([
+                FindPackageShare('gazebo_ros'),
+                'launch',
+                'gazebo.launch.py'
+            ])
+        ),
+        launch_arguments={
+            'world': LaunchConfiguration('world'),
+            'verbose': 'true',
+            'pause': 'false',
+            'gui': LaunchConfiguration('with_gazebo_gui')
+        }.items(),
+        condition=IfCondition(LaunchConfiguration('use_gazebo_ros_launch'))
+    )
+
     # # --- NEU: Hinzufügen des TF Relay Knotens ---
     # tf_relay_node = Node(
     #     package='robot', # Das Skript ist Teil deines 'robot'-Pakets
@@ -112,20 +182,29 @@ def generate_launch_description():
     # )
 
     # --- Launch-Beschreibung zusammenstellen ---
-    return LaunchDescription([
+    launch_actions = [
         use_sim_time_param,
         world_arg,
         rviz_config_arg,
+        headless_arg,
+        use_gazebo_ros_launch_arg,
+        with_gazebo_gui_arg,
+        with_rviz_arg,
+    ]
+
+    launch_actions.extend([
+        gazebo_launch,
         gzserver_cmd,
         gzclient_cmd,
         robot_state_publisher_node,
         spawn_entity_node,
         rviz_node,
         delay_spawners_after_spawn,
-        tf_relay_proc, # Der korrigierte Prozess-Start
-        # tf_relay_node, # Den neuen Relay-Knoten hinzufügen
-
+        tf_relay_proc,
+        # tf_relay_node,
     ])
+
+    return LaunchDescription(launch_actions)
 
 
 # import os
