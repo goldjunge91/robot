@@ -290,5 +290,5 @@ A curated list of helpful links and tutorials.
       * [ROS Dabbler Guide](https://rosdabbler.github.io/adventures-in-ros2-networking-2)
       * [Dan Aukes' Blog Post](https://www.danaukes.com/work-blog/2024-01-25-ros2-over-vpn/)
   * **Example Projects & Repos:**
-      * [ROSbot XL Autonomy (Husarion)](https://github.com/husarion/rosbot-xl-autonomy/tree/foxglove?tab=readme-ov-file)
+      * [robot XL Autonomy (Husarion)](https://github.com/husarion/robot-xl-autonomy/tree/foxglove?tab=readme-ov-file)
       * [Allison Thackston's Blog](https://www.allisonthackston.com/)

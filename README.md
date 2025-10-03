@@ -411,6 +411,6 @@ https://www.danaukes.com/work-blog/2024-01-25-ros2-over-vpn/
 https://kamathsblog.com/ros-2-and-vpns
 https://gitlab.uni-koblenz.de/intas/vacusim/-/blob/main/README-german.md
 https://gitlab.uni-koblenz.de/intas/ros2-humble-macos-docker-env
-[rosbot-xl-autonomy](https://github.com/husarion/rosbot-xl-autonomy/tree/foxglove?tab=readme-ov-file)
+[robot-xl-autonomy](https://github.com/husarion/robot-xl-autonomy/tree/foxglove?tab=readme-ov-file)
 [text](https://www.allisonthackston.com/)
 [Hardware sale page from husarion](https://husarion.com/tutorials/ros-equipment/)
