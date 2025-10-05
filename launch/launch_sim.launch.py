@@ -20,18 +20,19 @@ from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
 import xacro
 
+
 def generate_launch_description():
     pkg_share = get_package_share_directory('robot')
-    worlds_dir = os.path.join(pkg_share, 'worlds')
-    models_dir = os.path.join(pkg_share, 'models')
-    
-        # --- Launch-Argumente ---
+    os.path.join(pkg_share, 'worlds')
+    os.path.join(pkg_share, 'models')
+
+    # --- Launch-Argumente ---
     world_arg = DeclareLaunchArgument(
         name='world',
         default_value=os.path.join(pkg_share, 'worlds', 'empty.world'),
         description='Vollständiger Pfad zur zu ladenden World-Datei'
     )
-    
+
     rviz_config_arg = DeclareLaunchArgument(
         name='rviz_config',
         # Wir setzen die Odometrie-Ansicht als neuen Standard
@@ -139,7 +140,7 @@ def generate_launch_description():
         executable="spawner",
         arguments=["drive_controller", "--controller-manager", "/controller_manager"],
     )
-    
+
     delay_spawners_after_spawn = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=spawn_entity_node,
@@ -218,14 +219,14 @@ def generate_launch_description():
 
 # def generate_launch_description():
 #     pkg_share = get_package_share_directory('robot')
-    
+
 #     # --- Launch-Argumente ---
 #     world_arg = DeclareLaunchArgument(
 #         name='world',
 #         default_value=os.path.join(pkg_share, 'worlds', 'empty.world'),
 #         description='Vollständiger Pfad zur zu ladenden World-Datei'
 #     )
-    
+
 #     rviz_config_arg = DeclareLaunchArgument(
 #         name='rviz_config',
 #         default_value=os.path.join(pkg_share, 'config', 'view_robot.rviz'),
@@ -297,7 +298,7 @@ def generate_launch_description():
 #         executable="spawner",
 #         arguments=["mecanum_drive_controller", "--controller-manager", "/controller_manager"],
 #     )
-    
+
 #     # Event-Handler, der wartet, bis der Roboter gespawnt ist, und DANN die Controller startet.
 #     delay_spawners_after_spawn = RegisterEventHandler(
 #         event_handler=OnProcessExit(

@@ -6,6 +6,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
+
 def generate_launch_description():
 
     # Das 'robot' Paket, in dem wir uns befinden
@@ -52,8 +53,8 @@ def generate_launch_description():
     # --- Alles zusammenführen und starten ---
     return LaunchDescription([
         DeclareLaunchArgument(
-            'cmd_topic', 
-            default_value='/cmd_vel', 
+            'cmd_topic',
+            default_value='/cmd_vel',
             description='Topic for bridge/teleop'
         ),
         rsp,
@@ -122,11 +123,11 @@ def generate_launch_description():
 #     # --- Alles zusammenführen und starten ---
 #     return LaunchDescription([
 #         DeclareLaunchArgument(
-#             'cmd_topic', 
-#             default_value='/cmd_vel', 
+#             'cmd_topic',
+#             default_value='/cmd_vel',
 #             description='Topic for bridge/teleop'
 #         ),
-        
+
 #         # Alle Komponenten starten
 #         rsp,
 #         # camera_launch,
@@ -162,8 +163,8 @@ def generate_launch_description():
 
 # #     use_ros2_control = LaunchConfiguration('use_ros2_control')
 # #     cmd_topic_arg = DeclareLaunchArgument(
-# #         'cmd_topic', 
-# #         default_value='/cmd_vel', 
+# #         'cmd_topic',
+# #         default_value='/cmd_vel',
 # #         description='Topic for the robot bridge'
 # #     )
 # #     cmd_topic = LaunchConfiguration('cmd_topic')
@@ -319,15 +320,15 @@ def generate_launch_description():
 # #             DeclareLaunchArgument(
 # #                 'cmd_topic', default_value='/cmd_vel', description='Topic for bridge/teleop'
 # #             ),
-            
+
 # #             # Nodes, die immer laufen:
 # #             # rsp,
 # #             # camera_launch,
 # #             # lidar_launch,
-            
+
 # #             # Entweder die Bridge ODER ros2_control:
 # #             tb6612_bridge_proc,
-            
+
 # #             # delayed_controller_manager,
 # #             # #...
 # #             # diff_drive_spawner,

@@ -5,7 +5,6 @@ Usage: python3 wait_for_service.py /controller_manager/list_controllers
 """
 import sys
 import rclpy
-from rclpy.clock import Clock
 from controller_manager_msgs.srv import ListControllers
 
 

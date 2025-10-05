@@ -114,7 +114,7 @@ def generate_launch_description():
             delayed_controller_manager,
             delayed_diff_drive_spawner,
             delayed_joint_state_broadcaster_spawner,
-             # -------- NEU: Bridge starten --------
+            # -------- NEU: Bridge starten --------
             # tb6612_bridge_proc,
         ]
     )
