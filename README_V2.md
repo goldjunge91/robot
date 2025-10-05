@@ -82,8 +82,8 @@ sudo apt install -y \
   ros-dev-tools
 
 # Install core simulation and control packages
+  # ros-${ROS_DISTRO}-gazebo-ros-pkgs \
 sudo apt install -y \
-  ros-${ROS_DISTRO}-gazebo-ros-pkgs \
   ros-${ROS_DISTRO}-ros2-control \
   ros-${ROS_DISTRO}-ros2-controllers \
   ros-${ROS_DISTRO}-gazebo-ros2-control \
@@ -91,7 +91,6 @@ sudo apt install -y \
   ros-${ROS_DISTRO}-joint-state-publisher-gui \
   ros-${ROS_DISTRO}-urdf \
   ros-${ROS_DISTRO}-urdf-launch \
-  ros-${ROS_DISTRO}-urdf-tutorial \
   ros-${ROS_DISTRO}-twist-mux \
   ros-${ROS_DISTRO}-ros2-controllers \ 
   ros-${ROS_DISTRO}-rqt-image-view \
@@ -99,7 +98,7 @@ sudo apt install -y \
   ros-${ROS_DISTRO}-moveit-msgs \
   ros-${ROS_DISTRO}-moveit-ros-planning \ 
   ros-${ROS_DISTRO}-moveit-ros-planning-interface \
-  ros-${ROS_DISTRO}-moveit-servo \
+  ros-${ROS_DISTRO}-moveit-servo 
   
 
 # Install useful tools and extensions
