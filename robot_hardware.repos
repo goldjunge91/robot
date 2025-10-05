@@ -1,0 +1,17 @@
+repositories:
+  robot_controllers:
+    type: git
+    url: https://github.com/goldjunge91/robot_controllers
+    version: 9916ab4e087930b3ff947efec321ab9f8df531c5
+  robot-micro-ROS-Agent:
+    type: git
+    url: https://github.com/goldjunge91/robot-micro-ROS-Agent
+    version: af007872b034d1ed31de4815377031350ab0034b
+  husarion_components_description:
+    type: git
+    url: https://github.com/goldjunge91/husarion_components_description.git
+    version: 5ad18c27f53b129a99bf9df513d16fda5a4bca6f
+  robot_hardware_interfaces:
+    type: git
+    url: https://github.com/goldjunge91/robot_hardware_interfaces.git
+    version: cf62a32b2067c1575e6ef00886f4a3bdb91d18ac

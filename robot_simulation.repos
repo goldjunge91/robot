@@ -1,0 +1,13 @@
+repositories:
+  robot_controllers:
+    type: git
+    url: https://github.com/goldjunge91/robot_controllers
+    version: humble
+  robot_gz_worlds:
+    type: git
+    url: https://github.com/goldjunge91/robot_gz_worlds
+    version: humble
+  rosbot_components_description:
+    type: git
+    url: https://github.com/husarion/husarion_components_description.git
+    version: 5ad18c27f53b129a99bf9df513d16fda5a4bca6f
