@@ -233,6 +233,15 @@ To use physical hardware like a joystick connected via USB in WSL2, you must fir
 usbipd bind --busid 1-1
 ```
 
+| Pico Pin | Funktion | ICM-20948 Pin | 
+|----------|----------|---------------| 
+| Pin 16 | MISO (SPI0 RX) | SDA/SDI | 
+| Pin 17 | CS (Chip Select) | NCS | 
+| Pin 18 | SCK (Clock) | SCL/SCLK | 
+| Pin 19 | MOSI (SPI0 TX) | SDA/SDO | 
+| 3.3V | Power | VCC | 
+| GND | Ground | GND |
+
 -----
 ### troubleshooting & FAQ
 
