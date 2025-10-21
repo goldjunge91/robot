@@ -499,7 +499,7 @@
         <kinematic>0</kinematic>
       </link>
       <static>0</static>
-      <plugin name='gazebo_ros2_control' filename='libgazebo_ros2_control.so'>
+      <plugin name='gz_ros2_control::GazeboSimSystem' filename='gz-ros2-control-system'>
         <parameters>/mnt/c/Users/tozzi/Desktop/rc/dev_ws_robot/install/robot/share/robot/config/my_controllers.yaml</parameters>
         <parameters>/mnt/c/Users/tozzi/Desktop/rc/dev_ws_robot/install/robot/share/robot/config/gaz_ros2_ctl_use_sim.yaml</parameters>
       </plugin>

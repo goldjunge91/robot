@@ -3,7 +3,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <gazebo>
-        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+        <plugin name="gz_ros2_control::GazeboSimSystem" filename="gz-ros2-control-system">
             
             <parameters>$(find-pkg-share robot)/config/my_controllers_mecanum.yaml</parameters>
 
@@ -19,7 +19,7 @@
     <gazebo>
         <!-- <plugin name='diff_drive' filename='libgazebo_ros_diff_drive.so'> -->
     
-    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+    <plugin name="gz_ros2_control::GazeboSimSystem" filename="gz-ros2-control-system">
     
             <!-- Wheel Information -->
             <left_joint>left_wheel_joint</left_joint>
@@ -50,7 +50,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <gazebo>
-        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+        <plugin name="gz_ros2_control::GazeboSimSystem" filename="gz-ros2-control-system">
 
             <parameters>$(find-pkg-share robot)/config/my_controllers_mecanum.yaml</parameters>
 
