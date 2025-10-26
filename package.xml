@@ -6,18 +6,14 @@
   <description>TODO: Package description</description>
   <maintainer email="my_email@email.com">MY NAME</maintainer>
   <license>TODO: License declaration</license>
-
   <buildtool_depend>ament_cmake</buildtool_depend>
-
   <!-- Core robot functionality -->
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>xacro</exec_depend>
-
   <!-- Control system -->
   <exec_depend>ros2_control</exec_depend>
   <exec_depend>ros2_controllers</exec_depend>
   <exec_depend>controller_manager</exec_depend>
-
   <!-- <depend condition="$ROBOT_ROS_BUILD_TYPE == hardware">robot_bringup</depend> -->
   <!-- <depend condition="$ROBOT_ROS_BUILD_TYPE == simulation">robot_gazebo</depend> -->
   <!-- For simulation (optional) -->
